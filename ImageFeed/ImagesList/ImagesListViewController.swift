@@ -9,6 +9,12 @@ import UIKit
 
 final class ImagesListViewController: UIViewController {
     
+    // MARK: - IBOutlets
+    
+    @IBOutlet private var tableView: UITableView!
+    
+    // MARK: - Private Properties
+    
     //список мок картинок
     private let photosName: [String] = Array(0..<20).map{"\($0)"}
     
@@ -19,8 +25,8 @@ final class ImagesListViewController: UIViewController {
         formatter.timeStyle = .none
         return formatter
     }()
-
-    @IBOutlet private var tableView: UITableView!
+    
+    // MARK: - Lifecycle
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -33,12 +39,13 @@ final class ImagesListViewController: UIViewController {
     }
 }
 
+// MARK: - Extensions
+
 extension ImagesListViewController: UITableViewDelegate {
     //метод отвечает за действия, которые будут выполнены при тапе по ячейке
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        
-    }
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) { }
     
+    // метод вычисления высоты ячеек 
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         guard let image = UIImage(named: photosName[indexPath.row]) else {
             return 0
@@ -49,11 +56,13 @@ extension ImagesListViewController: UITableViewDelegate {
         let imageWidth = image.size.width
         let scale = imageViewWidht / imageWidth
         let cellHeight = image.size.height * scale + imageInsets.top + imageInsets.bottom
+        
         return cellHeight
     }
 }
 
 extension ImagesListViewController {
+    // метод конфигурации ячейки
     func configCell(for cell: ImagesListCell, with indexPath: IndexPath) {
         guard let image = UIImage(named: photosName[indexPath.row]) else {
             return
