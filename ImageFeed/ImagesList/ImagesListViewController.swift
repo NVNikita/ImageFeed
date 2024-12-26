@@ -26,6 +26,8 @@ final class ImagesListViewController: UIViewController {
         return formatter
     }()
     
+    private let currentDate = Date()
+    
     // MARK: - Lifecycle
     
     override func viewDidLoad() {
@@ -47,7 +49,9 @@ final class ImagesListViewController: UIViewController {
 
 extension ImagesListViewController: UITableViewDelegate {
     //метод отвечает за действия, которые будут выполнены при тапе по ячейке
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) { }
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        // TODO: - Добавить логику при нажатии на ячейку
+    }
     
     // метод вычисления высоты ячеек 
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
@@ -67,17 +71,17 @@ extension ImagesListViewController: UITableViewDelegate {
 
 extension ImagesListViewController {
     // метод конфигурации ячейки
-    func configCell(for cell: ImagesListCell, with indexPath: IndexPath) {
+    private func configCell(for cell: ImagesListCell, with indexPath: IndexPath) {
         guard let image = UIImage(named: photosName[indexPath.row]) else {
             return
         }
         
-        cell.ImageCell.image = image
-        cell.DateLabel.text = dateFormatter.string(from: Date())
+        cell.imageCell.image = image
+        cell.dateLabel.text = dateFormatter.string(from: currentDate)
         
         let isLiked = indexPath.row % 2 == 0
         let likeImage = isLiked ? UIImage(named: "Active_like") : UIImage(named: "No_active_like")
-        cell.ButtonLike.setImage(likeImage, for: .normal)
+        cell.buttonLike.setImage(likeImage, for: .normal)
     }
 }
 
@@ -89,10 +93,10 @@ extension ImagesListViewController: UITableViewDataSource {
     
     //метод, который возвращает ячейку
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: ImagesListCell.reuseIdentifier,
-                                                 for: indexPath)
-        
-        guard let imageListCell = cell as? ImagesListCell else {
+        guard let imageListCell = tableView.dequeueReusableCell(
+            withIdentifier: ImagesListCell.reuseIdentifier,
+            for: indexPath
+        ) as? ImagesListCell else {
             return UITableViewCell()
         }
             

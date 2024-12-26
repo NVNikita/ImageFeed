@@ -67,9 +67,9 @@
                                             </constraints>
                                         </tableViewCellContentView>
                                         <connections>
-                                            <outlet property="ButtonLike" destination="1w0-SR-1LY" id="RJz-qC-3EG"/>
-                                            <outlet property="DateLabel" destination="Ppu-hL-eFz" id="QDW-KX-t0K"/>
-                                            <outlet property="ImageCell" destination="utJ-Fg-Wr1" id="yTS-7T-OeE"/>
+                                            <outlet property="buttonLike" destination="1w0-SR-1LY" id="wBk-La-8uf"/>
+                                            <outlet property="dateLabel" destination="Ppu-hL-eFz" id="oXO-jW-s0e"/>
+                                            <outlet property="imageCell" destination="utJ-Fg-Wr1" id="Doy-bu-JcL"/>
                                         </connections>
                                     </tableViewCell>
                                 </prototypes>
