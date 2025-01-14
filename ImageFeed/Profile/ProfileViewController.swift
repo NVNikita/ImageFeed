@@ -67,6 +67,7 @@ final class ProfileViewController: UIViewController {
         labelStatus.topAnchor.constraint(equalTo: labelMail.bottomAnchor, constant: 8).isActive = true
         labelStatus.leadingAnchor.constraint(equalTo: labelName.leadingAnchor).isActive = true
         
+        // button logOut
         let buttonLogOut = UIButton.systemButton(with: UIImage(named: "logOut")!,
                                                  target: self,
                                                  action: #selector(Self.didTapButton))
