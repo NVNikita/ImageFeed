@@ -13,10 +13,10 @@ final class ProfileViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        //ProfileView
+        // profileView
         view.backgroundColor = .ypBlack
         
-        // Avatar photo
+        // avatar photo
         let profileImage = UIImage(named: "avatar")
         let imageView = UIImageView(image: profileImage)
         
@@ -28,7 +28,7 @@ final class ProfileViewController: UIViewController {
         imageView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 32).isActive = true
         imageView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16).isActive = true
         
-        // LabelName
+        // labelName
         let labelName = UILabel()
         
         labelName.translatesAutoresizingMaskIntoConstraints = false
@@ -67,7 +67,7 @@ final class ProfileViewController: UIViewController {
         labelStatus.topAnchor.constraint(equalTo: labelMail.bottomAnchor, constant: 8).isActive = true
         labelStatus.leadingAnchor.constraint(equalTo: labelName.leadingAnchor).isActive = true
         
-        // button logOut
+        // buttonLogOut
         let buttonLogOut = UIButton.systemButton(with: UIImage(named: "logOut")!,
                                                  target: self,
                                                  action: #selector(Self.didTapButton))
