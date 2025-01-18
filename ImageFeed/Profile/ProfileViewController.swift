@@ -9,6 +9,13 @@ import UIKit
 
 final class ProfileViewController: UIViewController {
     
+    // MARK: - Properties
+    private var profileImage: UIImageView!
+    private var labelName: UILabel!
+    private var labelMail: UILabel!
+    private var labelStatus: UILabel!
+    private var buttonLogOut: UIButton!
+    
     // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -16,73 +23,71 @@ final class ProfileViewController: UIViewController {
         // profileView
         view.backgroundColor = .ypBlack
         
-        // avatar photo
-        let profileImage = UIImage(named: "avatar")
-        let imageView = UIImageView(image: profileImage)
+        initializeUIComponents()
+        setupConstraints()
+    }
+    
+    // MARK: - Private Methods
+    private func initializeUIComponents() {
+        labelName = UILabel()
+        labelMail = UILabel()
+        labelStatus = UILabel()
         
-        imageView.translatesAutoresizingMaskIntoConstraints = false
-        view.addSubview(imageView)
+        profileImage = UIImageView()
+        profileImage.image = UIImage(named: "avatar")
         
-        imageView.heightAnchor.constraint(equalToConstant: 70).isActive = true
-        imageView.widthAnchor.constraint(equalToConstant: 70).isActive = true
-        imageView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 32).isActive = true
-        imageView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16).isActive = true
-        
-        // labelName
-        let labelName = UILabel()
-        
+        buttonLogOut = UIButton.systemButton(with: UIImage(named: "logOut")!,
+                                             target: self,
+                                             action: #selector(Self.didTapButton))
+    }
+    
+    private func setupConstraints() {
+        profileImage.translatesAutoresizingMaskIntoConstraints = false
         labelName.translatesAutoresizingMaskIntoConstraints = false
-        view.addSubview(labelName)
+        labelMail.translatesAutoresizingMaskIntoConstraints = false
+        labelStatus.translatesAutoresizingMaskIntoConstraints = false
+        buttonLogOut.translatesAutoresizingMaskIntoConstraints = false
         
+        view.addSubview(profileImage)
+        view.addSubview(labelName)
+        view.addSubview(labelMail)
+        view.addSubview(labelStatus)
+        view.addSubview(buttonLogOut)
+        
+        // profileImage constraints
+        profileImage.heightAnchor.constraint(equalToConstant: 70).isActive = true
+        profileImage.widthAnchor.constraint(equalToConstant: 70).isActive = true
+        profileImage.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 32).isActive = true
+        profileImage.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16).isActive = true
+        
+        // labelName constraints
         labelName.font = UIFont.systemFont(ofSize: 23, weight: .bold)
         labelName.textColor = .white
         labelName.text = "Екатерина Новикова"
-        
-        labelName.topAnchor.constraint(equalTo: imageView.bottomAnchor, constant: 8).isActive = true
+        labelName.topAnchor.constraint(equalTo: profileImage.bottomAnchor, constant: 8).isActive = true
         labelName.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16).isActive = true
         
-        // mailName
-        let labelMail = UILabel()
-        
-        labelMail.translatesAutoresizingMaskIntoConstraints = false
-        view.addSubview(labelMail)
-        
+        // labelMail constraints
         labelMail.font = UIFont.systemFont(ofSize: 13, weight: .light)
         labelMail.textColor = .mailLabel
         labelMail.text = "@ekaterina_nov"
-        
         labelMail.topAnchor.constraint(equalTo: labelName.bottomAnchor, constant: 8).isActive = true
         labelMail.leadingAnchor.constraint(equalTo: labelName.leadingAnchor).isActive = true
         
-        // labelStatus
-        let labelStatus = UILabel()
-        
-        labelStatus.translatesAutoresizingMaskIntoConstraints = false
-        view.addSubview(labelStatus)
-        
+        // labelStatus constraints
         labelStatus.textColor = .white
         labelStatus.font = UIFont.systemFont(ofSize: 13, weight: .light)
         labelStatus.text = "Hello, world!"
-        
         labelStatus.topAnchor.constraint(equalTo: labelMail.bottomAnchor, constant: 8).isActive = true
         labelStatus.leadingAnchor.constraint(equalTo: labelName.leadingAnchor).isActive = true
         
-        // buttonLogOut
-        let buttonLogOut = UIButton.systemButton(with: UIImage(named: "logOut")!,
-                                                 target: self,
-                                                 action: #selector(Self.didTapButton))
-        
-        buttonLogOut.translatesAutoresizingMaskIntoConstraints = false
-        view.addSubview(buttonLogOut)
-        
+        // buttonLogout constraints
         buttonLogOut.tintColor = .logOutButton
         buttonLogOut.heightAnchor.constraint(equalToConstant: 44).isActive = true
         buttonLogOut.widthAnchor.constraint(equalToConstant: 44).isActive = true
         buttonLogOut.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16).isActive = true
-        buttonLogOut.centerYAnchor.constraint(equalTo: imageView.centerYAnchor).isActive = true
+        buttonLogOut.centerYAnchor.constraint(equalTo: profileImage.centerYAnchor).isActive = true
     }
-    
-    // MARK: - Private Methods
     
     @objc
     private func didTapButton() {
