@@ -281,11 +281,20 @@
                                     <wkPreferences key="preferences"/>
                                 </wkWebViewConfiguration>
                             </wkWebView>
+                            <progressView opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="jGq-II-Jwb">
+                                <rect key="frame" x="0.0" y="103" width="393" height="4"/>
+                                <color key="backgroundColor" name="YP Black"/>
+                                <color key="progressTintColor" name="YP Black"/>
+                                <color key="trackTintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            </progressView>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="Ot5-Y0-asl"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
                             <constraint firstAttribute="bottom" secondItem="8fD-Zp-Ozd" secondAttribute="bottom" id="6Lv-Oo-QIm"/>
+                            <constraint firstItem="Ot5-Y0-asl" firstAttribute="trailing" secondItem="jGq-II-Jwb" secondAttribute="trailing" id="8BX-jR-K8N"/>
+                            <constraint firstItem="jGq-II-Jwb" firstAttribute="top" secondItem="Ot5-Y0-asl" secondAttribute="top" id="DkG-zR-ma3"/>
+                            <constraint firstItem="jGq-II-Jwb" firstAttribute="leading" secondItem="Ot5-Y0-asl" secondAttribute="leading" id="SED-E4-zvg"/>
                             <constraint firstItem="8fD-Zp-Ozd" firstAttribute="leading" secondItem="DCq-G6-iQl" secondAttribute="leading" id="Sq2-QO-eiw"/>
                             <constraint firstItem="8fD-Zp-Ozd" firstAttribute="top" secondItem="Ot5-Y0-asl" secondAttribute="top" id="Zi3-8c-qOb"/>
                             <constraint firstAttribute="trailing" secondItem="8fD-Zp-Ozd" secondAttribute="trailing" id="qy1-ka-Ldh"/>
@@ -293,6 +302,7 @@
                     </view>
                     <navigationItem key="navigationItem" id="pAs-P4-vlP"/>
                     <connections>
+                        <outlet property="progressView" destination="jGq-II-Jwb" id="zLl-zn-6wA"/>
                         <outlet property="webView" destination="8fD-Zp-Ozd" id="e41-D7-rbr"/>
                     </connections>
                 </viewController>
