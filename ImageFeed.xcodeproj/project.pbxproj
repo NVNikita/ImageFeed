@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		EB173C5D2D18693F00C39CBD /* ImagesListCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB173C5C2D18693F00C39CBD /* ImagesListCell.swift */; };
+		EB3BBD322D4530FD00958EE6 /* WebViewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB3BBD312D4530FD00958EE6 /* WebViewViewController.swift */; };
 		EB3DBC752D4517400096C758 /* AuthViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB3DBC742D4517400096C758 /* AuthViewController.swift */; };
 		EB6E94AA2D1F619C006AEA2A /* ProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB6E94A92D1F619C006AEA2A /* ProfileViewController.swift */; };
 		EB93018E2D3C1EAD00B1DAFA /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB93018D2D3C1EAD00B1DAFA /* Constants.swift */; };
@@ -22,6 +23,7 @@
 
 /* Begin PBXFileReference section */
 		EB173C5C2D18693F00C39CBD /* ImagesListCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagesListCell.swift; sourceTree = "<group>"; };
+		EB3BBD312D4530FD00958EE6 /* WebViewViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebViewViewController.swift; sourceTree = "<group>"; };
 		EB3DBC742D4517400096C758 /* AuthViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthViewController.swift; sourceTree = "<group>"; };
 		EB6E94A92D1F619C006AEA2A /* ProfileViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileViewController.swift; sourceTree = "<group>"; };
 		EB93018D2D3C1EAD00B1DAFA /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
@@ -60,6 +62,7 @@
 			isa = PBXGroup;
 			children = (
 				EB3DBC742D4517400096C758 /* AuthViewController.swift */,
+				EB3BBD312D4530FD00958EE6 /* WebViewViewController.swift */,
 			);
 			path = Auth;
 			sourceTree = "<group>";
@@ -192,6 +195,7 @@
 				EB3DBC752D4517400096C758 /* AuthViewController.swift in Sources */,
 				EB93018E2D3C1EAD00B1DAFA /* Constants.swift in Sources */,
 				EBF45B2A2D22D9FE00B3C6CF /* SingleImageViewController.swift in Sources */,
+				EB3BBD322D4530FD00958EE6 /* WebViewViewController.swift in Sources */,
 				EBC2DCFA2D1551A5000F42E3 /* SceneDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
