@@ -17,7 +17,7 @@ final class WebViewViewController: UIViewController {
     
     // MARK: IBOulets
     
-    @IBOutlet weak var progressView: UIProgressView!
+    @IBOutlet private weak var progressView: UIProgressView!
     @IBOutlet private var webView: WKWebView!
     
     weak var delegate: WebViewViewControllerDelegate?
@@ -96,33 +96,11 @@ final class WebViewViewController: UIViewController {
         // формируем urlRequest и передаем его webView для загрузки
         let request = URLRequest(url: url)
         webView.load(request)
-        
-        
-    }
-    
-    // MARK: - Public Methods
-    
-    func makeOAuthTokenRequest(code: String) -> URLRequest? {
-        guard let baseURL = URL(string: "https://unsplash.com") else {
-            print("Error creating base URL in URLRequets")
-            return nil
-        }
-        
-        let urlString = "/oauth/token?client_id=\(Constants.accessKey)&client_secret=\(Constants.secretKey)&redirect_uri=\(Constants.redirectURI)&code=\(code)&grant_type=authorization_code"
-        guard let url = URL(string: urlString, relativeTo: baseURL) else {
-            print("Error creating URL for OAuth token request")
-            return nil
-        }
-        
-        var request = URLRequest(url: url)
-        request.httpMethod = "POST"
-        
-        return request
     }
     
     // MARK: IBActions
     
-    @IBAction func buttonOutDidTap(_ sender: Any?) {
+    @IBAction private func buttonOutDidTap(_ sender: Any?) {
         delegate?.webViewViewControllerDidCancel(self)
     }
 }

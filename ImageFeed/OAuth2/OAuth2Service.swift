@@ -18,7 +18,7 @@ struct OAuthTokenResponseBody: Decodable {
 final class OAuth2Service {
     
     // MARK: - Private Properties
-    
+    private let urlToken = "https://unsplash.com/oauth/token"
     private let storage = OAuth2TokenStorage()
     
     // MARK: - Initialized
@@ -29,7 +29,7 @@ final class OAuth2Service {
     
     // функция для получения токена
     func fetchOAuthToken(code: String, handler: @escaping (Result<String, Error>) -> Void) {
-        guard let tokenURL = URL(string: "https://unsplash.com/oauth/token") else {
+        guard let tokenURL = URL(string: urlToken) else {
             print("Error creating token URL")
             handler(.failure(NetworkError.urlSessionError))
             return
@@ -64,62 +64,28 @@ final class OAuth2Service {
         
         print("Good request")
         
-        // выполняем запрос
-        let task = URLSession.shared.dataTask(with: request) { data, response, error in
-            // проверяем, пришла ли ошибка
-            if let error = error {
+        // выполняем запрос с использованием расширения URLSession
+        let task = URLSession.shared.data(for: request) { result in
+            switch result {
+            case .success(let data):
+                // декодируем данные
+                do {
+                    let tokenResponse = try JSONDecoder().decode(OAuthTokenResponseBody.self, from: data)
+                    // cохраняем токен
+                    self.storage.token = tokenResponse.accessToken
+                    print("Decoding good")
+                    print(tokenResponse.accessToken)
+                    DispatchQueue.main.async {
+                        handler(.success(tokenResponse.accessToken))
+                    }
+                } catch {
+                    print("Decoding error: \(error.localizedDescription)")
+                    DispatchQueue.main.async {
+                        handler(.failure(error))
+                    }
+                }
+            case .failure(let error):
                 print("Network request error: \(error.localizedDescription)")
-                DispatchQueue.main.async {
-                    handler(.failure(error))
-                }
-                return
-            }
-            
-            print("Dont have requets error")
-            
-            // проверяем статус-код
-            guard let httpResponse = response as? HTTPURLResponse else {
-                print("Invalid response")
-                DispatchQueue.main.async {
-                    handler(.failure(NetworkError.invalidResponse))
-                }
-                return
-            }
-            
-            print("Good HHTPResponce")
-            
-            guard (200..<300).contains(httpResponse.statusCode) else {
-                print("Server returned status code: \(httpResponse.statusCode)")
-                DispatchQueue.main.async {
-                    handler(.failure(NetworkError.invalidResponse))
-                }
-                return
-            }
-            
-            print("Good status code\(httpResponse.statusCode)")
-            
-            // проверяем наличие данных
-            guard let data = data else {
-                print("No data received from server")
-                DispatchQueue.main.async {
-                    handler(.failure(NetworkError.noData))
-                }
-                return
-            }
-            
-            print("Data received from server")
-            
-            // декодируем данные
-            do {
-                let tokenResponse = try JSONDecoder().decode(OAuthTokenResponseBody.self, from: data)
-                // cохраняем токен
-                self.storage.token = tokenResponse.accessToken
-                print(tokenResponse.accessToken)
-                DispatchQueue.main.async {
-                    handler(.success(tokenResponse.accessToken))
-                }
-            } catch {
-                print("Decoding error: \(error.localizedDescription)")
                 DispatchQueue.main.async {
                     handler(.failure(error))
                 }
