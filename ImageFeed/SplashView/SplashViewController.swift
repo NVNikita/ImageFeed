@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import ProgressHUD
  
 final class SplashViewController: UIViewController, AuthViewControllerDelegate {
     
@@ -80,8 +81,10 @@ extension SplashViewController {
 extension SplashViewController {
     func didAuthenticate(_ vc: AuthViewController, code: String) {
         vc.dismiss(animated: true)
+        ProgressHUD.animate()
         oauth2Service.fetchOAuthToken(code: code) { result in
             DispatchQueue.main.async {
+                ProgressHUD.dismiss()
                 switch result {
                 case .success(let token):
                     // токен получен
