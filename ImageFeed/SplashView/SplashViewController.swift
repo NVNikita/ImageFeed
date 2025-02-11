@@ -81,10 +81,10 @@ extension SplashViewController {
 extension SplashViewController {
     func didAuthenticate(_ vc: AuthViewController, code: String) {
         vc.dismiss(animated: true)
-        ProgressHUD.animate()
+        UIBlockingProgressHUD.show()
         oauth2Service.fetchOAuthToken(code: code) { result in
             DispatchQueue.main.async {
-                ProgressHUD.dismiss()
+                UIBlockingProgressHUD.dissmis()
                 switch result {
                 case .success(let token):
                     // токен получен

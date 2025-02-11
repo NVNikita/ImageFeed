@@ -55,12 +55,6 @@ final class OAuth2Service {
         let task = URLSession.shared.data(for: request) { [ weak self] result in
             guard let self = self else { return }
             
-            // проверяем, что запрос не был отменен
-            if self.lastCode != code {
-                handler(.failure(AuthServiceError.invalidRequest))
-                return
-            }
-            
             switch result {
             case .success(let data):
                 // декодируем данные
