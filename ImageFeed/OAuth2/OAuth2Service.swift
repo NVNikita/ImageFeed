@@ -15,11 +15,17 @@ struct OAuthTokenResponseBody: Decodable {
     }
 }
 
+enum AuthServiceError: Error {
+    case invalidRequest
+}
+
 final class OAuth2Service {
     
     // MARK: - Private Properties
     private let urlToken = "https://unsplash.com/oauth/token"
     private let storage = OAuth2TokenStorage()
+    private var task: URLSessionTask?
+    private var lastCode: String?
     
     // MARK: - Initialized
     
@@ -29,43 +35,32 @@ final class OAuth2Service {
     
     // функция для получения токена
     func fetchOAuthToken(code: String, handler: @escaping (Result<String, Error>) -> Void) {
-        guard let tokenURL = URL(string: urlToken) else {
-            print("Error creating token URL")
-            handler(.failure(NetworkError.urlSessionError))
+        // проверяем, что код выполянется из главного потока 
+        assert(Thread.isMainThread)
+        
+        guard lastCode != code else {
+            handler(.failure(AuthServiceError.invalidRequest))
             return
         }
         
-        print("Good tokenURL")
+        task?.cancel()
+        lastCode = code
         
-        // собираем запрос
-        var request = URLRequest(url: tokenURL)
-        request.httpMethod = "POST"
-        
-        // преобразуем параметры в тело запроса
-        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-        
-        // параметры запроса
-        let body: [String: String] = [
-            "client_id": Constants.accessKey,
-            "client_secret": Constants.secretKey,
-            "redirect_uri": Constants.redirectURI,
-            "code": code,
-            "grant_type": "authorization_code"
-        ]
-        
-        // преобразуем тело запроса в JSON
-        guard let httpBody = try? JSONSerialization.data(withJSONObject: body, options: []) else {
-            print("Error creating HTTP body")
-            handler(.failure(NetworkError.urlSessionError))
+        guard let request = makeOAuthTokenRequest(code: code) else {
+            handler(.failure(AuthServiceError.invalidRequest))
             return
         }
-        
-        request.httpBody = httpBody
-        
-        print("Good request")
         
         // выполняем запрос с использованием расширения URLSession
-        let task = URLSession.shared.data(for: request) { result in
+        let task = URLSession.shared.data(for: request) { [ weak self] result in
+            guard let self = self else { return }
+            
+            // проверяем, что запрос не был отменен
+            if self.lastCode != code {
+                handler(.failure(AuthServiceError.invalidRequest))
+                return
+            }
+            
             switch result {
             case .success(let data):
                 // декодируем данные
@@ -90,8 +85,49 @@ final class OAuth2Service {
                     handler(.failure(error))
                 }
             }
+            self.task = nil
+            self.lastCode = nil
+        }
+        self.task = task
+        task.resume()
+    }
+    
+    // MARK: - Private Methods
+    
+    private func makeOAuthTokenRequest(code: String) -> URLRequest? {
+        guard let tokenURL = URL(string: urlToken) else {
+            print("Error creating token URL")
+            return nil
         }
         
-        task.resume()
+        print("Good tokenURL")
+        
+        // собираем запрос
+        var request = URLRequest(url: tokenURL)
+        request.httpMethod = "POST"
+        
+        // преобразуем параметры в тело запроса
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        
+        // параметры запроса
+        let body: [String: String] = [
+            "client_id": Constants.accessKey,
+            "client_secret": Constants.secretKey,
+            "redirect_uri": Constants.redirectURI,
+            "code": code,
+            "grant_type": "authorization_code"
+        ]
+        
+        // преобразуем тело запроса в JSON
+        guard let httpBody = try? JSONSerialization.data(withJSONObject: body, options: []) else {
+            print("Error creating HTTP body")
+            return nil
+        }
+        
+        request.httpBody = httpBody
+        
+        print("Good request")
+        
+        return request
     }
 }
