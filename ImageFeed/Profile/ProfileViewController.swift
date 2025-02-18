@@ -15,6 +15,7 @@ final class ProfileViewController: UIViewController {
     private var labelMail: UILabel!
     private var labelStatus: UILabel!
     private var buttonLogOut: UIButton!
+    private var profileServise: ProfileService?
     
     // MARK: - Lifecycle
     override func viewDidLoad() {
@@ -23,8 +24,34 @@ final class ProfileViewController: UIViewController {
         // profileView
         view.backgroundColor = .ypBlack
         
+        guard let token = OAuth2TokenStorage().token else {
+            print("Error tokenStorage in ProfileViewController")
+            return
+        }
+        
+        profileServise = ProfileService.shared
+        
+        // парсим информацию о профиле из json в профиль 
+        profileServise?.fetchProfile(token) { [ weak self ] rezult in
+            switch rezult {
+            case .success(let profile):
+                DispatchQueue.main.async {
+                    self?.updateProfileDetails(profile: profile)
+                    print("Data in viewDidLoad ProfileViewController")
+                }
+            case .failure(let error):
+                print("Error: \(error)")
+            }
+        }
+
         initializeUIComponents()
         setupConstraints()
+    }
+    
+    private func updateProfileDetails(profile: Profile) {
+        labelName.text = profile.name
+        labelMail.text = profile.loginName
+        labelStatus.text = profile.bio
     }
     
     // MARK: - Private Methods

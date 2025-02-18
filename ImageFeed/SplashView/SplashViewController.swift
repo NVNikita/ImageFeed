@@ -15,6 +15,7 @@ final class SplashViewController: UIViewController, AuthViewControllerDelegate {
     private let showAuthenticationScreenSegueIdentifier = "ShowAuthenticationScreen"
     private let oauth2Service = OAuth2Service()
     private let storage = OAuth2TokenStorage()
+    private let profileService = ProfileService.shared
     
     // MARK: Lifecycle
     
@@ -22,8 +23,8 @@ final class SplashViewController: UIViewController, AuthViewControllerDelegate {
         super.viewDidAppear(animated)
         
         // првоерка ключа
-        if storage.token != nil {
-            switchToTabBarController()
+        if let token = storage.token {
+            fetchProfile(token: token)
         } else {
             performSegue(withIdentifier: showAuthenticationScreenSegueIdentifier, sender: nil)
         }
@@ -39,6 +40,22 @@ final class SplashViewController: UIViewController, AuthViewControllerDelegate {
     }
     
     // MARK: - Prifate Methods
+    
+    private func fetchProfile(token: String) {
+        UIBlockingProgressHUD.show()
+        profileService.fetchProfile(token) { [weak self] rezult in
+            UIBlockingProgressHUD.dismis()
+            
+            guard let self = self else { return }
+            
+            switch rezult {
+            case .success:
+                self.switchToTabBarController()
+            case .failure:
+                print("ERROR load profile")
+            }
+        }
+    }
     
     private func switchToTabBarController() {
         
@@ -81,14 +98,21 @@ extension SplashViewController {
 extension SplashViewController {
     func didAuthenticate(_ vc: AuthViewController, code: String) {
         vc.dismiss(animated: true)
+        
         UIBlockingProgressHUD.show()
+        
         oauth2Service.fetchOAuthToken(code: code) { result in
             DispatchQueue.main.async {
-                UIBlockingProgressHUD.dissmis()
+                UIBlockingProgressHUD.dismis()
                 switch result {
                 case .success(let token):
                     // токен получен
+                    self.storage.token = token
                     print("Token: \(token)")
+                    
+                    if let token = self.storage.token {
+                        self.fetchProfile(token: token)
+                    }
                     self.switchToTabBarController()
                 case .failure(let error):
                     // ошибка
@@ -99,3 +123,4 @@ extension SplashViewController {
         }
     }
 }
+
