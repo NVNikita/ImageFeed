@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		EB0C9F362D64F8BA00B4FC05 /* ProfileImageService.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB0C9F352D64F8BA00B4FC05 /* ProfileImageService.swift */; };
 		EB13AB082D4FCF150072F0FC /* OAuth2TokenStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB13AB072D4FCF150072F0FC /* OAuth2TokenStorage.swift */; };
 		EB173C5D2D18693F00C39CBD /* ImagesListCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB173C5C2D18693F00C39CBD /* ImagesListCell.swift */; };
 		EB3BBD322D4530FD00958EE6 /* WebViewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB3BBD312D4530FD00958EE6 /* WebViewViewController.swift */; };
@@ -30,6 +31,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		EB0C9F352D64F8BA00B4FC05 /* ProfileImageService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileImageService.swift; sourceTree = "<group>"; };
 		EB13AB072D4FCF150072F0FC /* OAuth2TokenStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OAuth2TokenStorage.swift; sourceTree = "<group>"; };
 		EB173C5C2D18693F00C39CBD /* ImagesListCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagesListCell.swift; sourceTree = "<group>"; };
 		EB3BBD312D4530FD00958EE6 /* WebViewViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebViewViewController.swift; sourceTree = "<group>"; };
@@ -88,6 +90,7 @@
 			children = (
 				EB6E94A92D1F619C006AEA2A /* ProfileViewController.swift */,
 				EB730F662D5BAA4500770E95 /* ProfileService.swift */,
+				EB0C9F352D64F8BA00B4FC05 /* ProfileImageService.swift */,
 			);
 			path = Profile;
 			sourceTree = "<group>";
@@ -255,6 +258,7 @@
 				EBC2DCFC2D1551A5000F42E3 /* ImagesListViewController.swift in Sources */,
 				EB173C5D2D18693F00C39CBD /* ImagesListCell.swift in Sources */,
 				EBC2DCF82D1551A5000F42E3 /* AppDelegate.swift in Sources */,
+				EB0C9F362D64F8BA00B4FC05 /* ProfileImageService.swift in Sources */,
 				EBA25DEE2D5075D9003D307B /* WebViewViewControllerDelegate.swift in Sources */,
 				EB3DBC752D4517400096C758 /* AuthViewController.swift in Sources */,
 				EB93018E2D3C1EAD00B1DAFA /* Constants.swift in Sources */,

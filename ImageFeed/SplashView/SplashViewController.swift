@@ -16,6 +16,7 @@ final class SplashViewController: UIViewController, AuthViewControllerDelegate {
     private let oauth2Service = OAuth2Service()
     private let storage = OAuth2TokenStorage()
     private let profileService = ProfileService.shared
+    private let profileImageService = ProfileImageService.shared
     
     // MARK: Lifecycle
     
@@ -45,14 +46,28 @@ final class SplashViewController: UIViewController, AuthViewControllerDelegate {
         UIBlockingProgressHUD.show()
         profileService.fetchProfile(token) { [weak self] rezult in
             UIBlockingProgressHUD.dismis()
-            
             guard let self = self else { return }
             
             switch rezult {
-            case .success:
+            case .success(let profile):
+                self.fetchProfileImageURL(username: profile.username)
                 self.switchToTabBarController()
             case .failure:
                 print("ERROR load profile")
+            }
+        }
+        
+    }
+    // запршиваем аватарку 
+    private func fetchProfileImageURL(username: String) {
+        profileImageService.fetchProfileImageURL(username: username) { [ weak self ] result in
+            guard let self = self else { return }
+            
+            switch result {
+            case .success(let imageURL):
+                print("Profile image URL \(imageURL)")
+            case .failure(let error):
+                print("ERROR: failed to image URL - \(error)")
             }
         }
     }

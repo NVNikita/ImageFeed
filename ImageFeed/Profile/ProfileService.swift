@@ -43,7 +43,6 @@ final class ProfileService {
     private init() {}
     
     private let urlMe: String = "https://api.unsplash.com/me"
-    private let authToken = OAuth2TokenStorage().token
     private var task: URLSessionTask? // для хранения текущей задачи
     private(set) var profile: Profile? // для хранения анных профиля
     

@@ -65,21 +65,15 @@ final class OAuth2Service {
                     self.storage.token = tokenResponse.accessToken
                     print("Decoding fetchToken good")
                     print(tokenResponse.accessToken)
-                    DispatchQueue.main.async {
-                        handler(.success(tokenResponse.accessToken))
-                    }
+                    handler(.success(tokenResponse.accessToken))
 
                 } catch {
                     print("Decoding error: \(error.localizedDescription)")
-                    DispatchQueue.main.async {
-                        handler(.failure(error))
-                    }
+                    handler(.failure(error))
                 }
             case .failure(let error):
                 print("Network request error: \(error.localizedDescription)")
-                DispatchQueue.main.async {
-                    handler(.failure(error))
-                }
+                handler(.failure(error))
             }
             self.task = nil
             self.lastCode = nil
