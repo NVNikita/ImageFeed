@@ -29,6 +29,7 @@ struct ProfileImage: Codable {
 
 final class ProfileImageService {
     
+    static let didChangeNotification = Notification.Name(rawValue: "ProfileImageProviderDidChange")
     static let shared = ProfileImageService()
     
     init() {}
@@ -67,10 +68,11 @@ final class ProfileImageService {
             
             if let error = error {
                 completion(.failure(error))
+                return
             }
             
             if let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode != 200 {
-                completion(.failure(NetworkError.httpStatusCode(httpResponse.statusCode)))
+                completion(.failure(NetworkErrorProfileService.httpStatusCode(httpResponse.statusCode)))
                 return
             }
             
@@ -84,6 +86,12 @@ final class ProfileImageService {
                 let avatarURL = userRezult.profileImage.small
                 self.avatarURL = avatarURL
                 completion(.success(avatarURL))
+                
+                NotificationCenter.default.post(
+                    name: ProfileImageService.didChangeNotification,
+                    object: self,
+                    userInfo: ["URL": avatarURL])
+                
             } catch {
                 
                 completion(.failure(error))

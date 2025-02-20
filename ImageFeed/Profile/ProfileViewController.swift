@@ -16,10 +16,22 @@ final class ProfileViewController: UIViewController {
     private var labelStatus: UILabel!
     private var buttonLogOut: UIButton!
     private var profileServise: ProfileService?
+    private var profileImageServiceObserver: NSObjectProtocol?
     
     // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        profileImageServiceObserver = NotificationCenter.default
+                    .addObserver(
+                        forName: ProfileImageService.didChangeNotification,
+                        object: nil,
+                        queue: .main)
+                        { [weak self] _ in
+                        guard let self = self else { return }
+                        self.updateAvatar()
+                    }
+                updateAvatar()
         
         // profileView
         view.backgroundColor = .ypBlack
@@ -46,6 +58,14 @@ final class ProfileViewController: UIViewController {
 
         initializeUIComponents()
         setupConstraints()
+    }
+    
+    private func updateAvatar() {
+        guard
+            let profileImage = ProfileImageService.shared.avatarURL,
+            let url = URL(string: profileImage)
+        else { return }
+        // TODO: - обновить аватар с помощью кингфисшер
     }
     
     private func updateProfileDetails(profile: Profile) {
