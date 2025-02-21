@@ -26,6 +26,7 @@ final class OAuth2Service {
     private let storage = OAuth2TokenStorage()
     private var task: URLSessionTask?
     private var lastCode: String?
+    static let shared = OAuth2Service()
     
     // MARK: - Initialized
     
@@ -47,7 +48,7 @@ final class OAuth2Service {
         lastCode = code
         
         guard let request = makeOAuthTokenRequest(code: code) else {
-            print("Error request in fetchOAuthToken")
+            print("[OAuth2Service]: [Error request in fetchOAuthToken]")
             handler(.failure(AuthServiceError.invalidRequest))
             return
         }
@@ -57,21 +58,20 @@ final class OAuth2Service {
             (result: Result<OAuthTokenResponseBody, Error>) in
             guard let self = self else { return }
             
-            DispatchQueue.main.async {
-                switch result {
-                case .success(let tokenResponse):
-                    self.storage.token = tokenResponse.accessToken
-                    self.lastCode = nil
-                    print("Decoding fetch token good")
-                    print("\(tokenResponse.accessToken)")
-                    handler(.success(tokenResponse.accessToken))
-                case .failure(let error):
-                    print("Error: decode")
-                    handler(.failure(error))
-                }
-                // обнулились
-                self.task = nil
+            
+            switch result {
+            case .success(let tokenResponse):
+                self.storage.token = tokenResponse.accessToken
+                self.lastCode = nil
+                print("OAuth2Service - Decoding fetch token good")
+                print("\(tokenResponse.accessToken)")
+                handler(.success(tokenResponse.accessToken))
+            case .failure(let error):
+                print("[OAuth2Service]: [Decoding error OAuth2Service] [\(error.localizedDescription)]")
+                handler(.failure(error))
             }
+            // обнулились
+            self.task = nil
         }
         // сохранили задачу
         self.task = task
@@ -82,11 +82,11 @@ final class OAuth2Service {
     
     private func makeOAuthTokenRequest(code: String) -> URLRequest? {
         guard let tokenURL = URL(string: urlToken) else {
-            print("Error creating token oauth URL")
+            print("[OAuth2Service]: [Error creating token oauth URL]")
             return nil
         }
         
-        print("Good oauth tokenURL")
+        print("OAuth2Service - Good oauth tokenURL")
         
         // собираем запрос
         var request = URLRequest(url: tokenURL)
@@ -106,13 +106,13 @@ final class OAuth2Service {
         
         // преобразуем тело запроса в JSON
         guard let httpBody = try? JSONSerialization.data(withJSONObject: body, options: []) else {
-            print("Error creating HTTP body for oauth")
+            print("[OAuth2Service]: [Error creating HTTP body for oauth]")
             return nil
         }
         
         request.httpBody = httpBody
         
-        print("Good POST request in O2Service")
+        print("OAuth2Service - Good POST request in O2Service")
         
         return request
     }

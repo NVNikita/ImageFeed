@@ -45,6 +45,7 @@ final class ProfileService {
     private let urlMe: String = "https://api.unsplash.com/me"
     private var task: URLSessionTask? // для хранения текущей задачи
     private(set) var profile: Profile? // для хранения анных профиля
+    private var isFetchingProfile: Bool = false // флаг для отслежи
     
     // MARK: - Public Methods
     
@@ -52,32 +53,40 @@ final class ProfileService {
         // отменяем предыдущую задачу, если она существует
         assert(Thread.isMainThread)
         
+        // отменяем задачу, если она существует
+        if isFetchingProfile == true {
+            return
+        }
+        
+        isFetchingProfile = true // установили флаг
+        
         task?.cancel()
         
         // проверка токена
         guard let request = makeProfileRequest(token: token) else {
-            print("Error request in fecthProfile ")
+            print("[ProfileService]: [Error request in fecthProfile]")
             completion(.failure(NetworkError.urlSessionError))
             return
         }
         
-        print("Good request in profileService")
+        print("ProfileService - Good request in profileService")
         
         let task = URLSession.shared.objectTask(for: request) { [ weak self ]
             (result: Result<ProfileResult, Error>) in
             guard let self = self else { return }
             
-            DispatchQueue.main.async {
-                switch result {
-                case .success(let profileResult):
-                    let profile = Profile(profileResult: profileResult)
-                    self.profile = profile
-                    print("GOOD: Decoding profile good")
-                    completion(.success(profile))
-                case .failure(let error):
-                    print("ERROR: Decoding error profileService: \(error.localizedDescription)")
-                    completion(.failure(error))
-                }
+            self.isFetchingProfile = false
+            
+            switch result {
+            case .success(let profileResult):
+                let profile = Profile(profileResult: profileResult)
+                self.profile = profile
+                print("ProfileService - Decoding profile good")
+                completion(.success(profile))
+            case .failure(let error):
+                print("[ProfileService]: [Decoding error profileService] [\(error.localizedDescription)]")
+                completion(.failure(error))
+                
             }
             // обнуляемся
             self.task = nil
@@ -92,10 +101,10 @@ final class ProfileService {
     // вспомогательный метод запроса
     private func makeProfileRequest(token: String) -> URLRequest? {
         guard let url = URL(string: urlMe) else {
-            print("Error creating token profile URL")
+            print("[ProfileService]: [Error creating token profile URL]")
             return nil
         }
-        print("Good url \(url) and bearerToken = true ")
+        print("ProfileService - Good url [\(url)] and bearerToken = true ")
         
         var request = URLRequest(url: url)
         request.httpMethod = "GET"

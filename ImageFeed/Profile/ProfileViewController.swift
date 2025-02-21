@@ -15,12 +15,15 @@ final class ProfileViewController: UIViewController {
     private var labelMail: UILabel!
     private var labelStatus: UILabel!
     private var buttonLogOut: UIButton!
-    private var profileServise: ProfileService?
+    private var profileServise = ProfileService.shared
     private var profileImageServiceObserver: NSObjectProtocol?
     
     // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        initializeUIComponents()
+        setupConstraints()
         
         profileImageServiceObserver = NotificationCenter.default
                     .addObserver(
@@ -36,28 +39,7 @@ final class ProfileViewController: UIViewController {
         // profileView
         view.backgroundColor = .ypBlack
         
-        guard let token = OAuth2TokenStorage().token else {
-            print("Error tokenStorage in ProfileViewController")
-            return
-        }
-        
-        profileServise = ProfileService.shared
-        
-        // парсим информацию о профиле из json в профиль 
-        profileServise?.fetchProfile(token) { [ weak self ] rezult in
-            switch rezult {
-            case .success(let profile):
-                DispatchQueue.main.async {
-                    self?.updateProfileDetails(profile: profile)
-                    print("Data in viewDidLoad ProfileViewController")
-                }
-            case .failure(let error):
-                print("Error: \(error)")
-            }
-        }
-
-        initializeUIComponents()
-        setupConstraints()
+        updateProfileDetails()
     }
     
     private func updateAvatar() {
@@ -68,7 +50,12 @@ final class ProfileViewController: UIViewController {
         // TODO: - обновить аватар с помощью кингфисшер
     }
     
-    private func updateProfileDetails(profile: Profile) {
+    private func updateProfileDetails() {
+        guard let profile = ProfileService.shared.profile else {
+            print("[ProfileViewService]: [Error in updateProfileDetails]")
+            return
+        }
+        
         labelName.text = profile.name
         labelMail.text = profile.loginName
         labelStatus.text = profile.bio

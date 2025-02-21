@@ -29,25 +29,25 @@ extension URLSession {
         let task = dataTask(with: request) { data, response, error in
             
             if let error = error {
-                print("URLRequestError: \(error.localizedDescription)")
+                print("[objectTask]: [URLRequestError] [\(error.localizedDescription)]")
                 fulfillCompletionOnTheMainThread(.failure(NetworkError.urlRequestError(error)))
                 return
             }
             
             guard let httpResponse = response as? HTTPURLResponse else {
-                print("URLSessionError: no httpResponse ")
+                print("[objectTask]: [URLSessionError: no httpResponse]")
                 fulfillCompletionOnTheMainThread(.failure(NetworkError.urlSessionError))
                 return
             }
             
             guard (200...299).contains(httpResponse.statusCode) else {
-                print("HTTPStatusCodeError: statusCode \(httpResponse.statusCode)")
+                print("[objectTask]: [HTTPStatusCodeError] [statusCode - \(httpResponse.statusCode)]")
                 fulfillCompletionOnTheMainThread(.failure(NetworkError.httpStatusCode(httpResponse.statusCode)))
                 return
             }
             
             guard let data = data else {
-                print("URLSession: no data in response")
+                print("[objectTask]: [URLSession] [no data in response]")
                 fulfillCompletionOnTheMainThread(.failure(NetworkError.noData))
                 return
             }
@@ -56,7 +56,7 @@ extension URLSession {
                 let decodedObject = try JSONDecoder().decode(T.self, from: data)
                 fulfillCompletionOnTheMainThread(.success(decodedObject))
             } catch {
-                print("DecodingError: \(error.localizedDescription)")
+                print("[Ошибка декодирования]: [\(error.localizedDescription)], [Данные: \(String(data: data, encoding: .utf8) ?? "")]")
                 fulfillCompletionOnTheMainThread(.failure(NetworkError.decodingError))
             }
         }

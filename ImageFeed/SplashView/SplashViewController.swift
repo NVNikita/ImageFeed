@@ -26,6 +26,7 @@ final class SplashViewController: UIViewController, AuthViewControllerDelegate {
         // првоерка ключа
         if let token = storage.token {
             fetchProfile(token: token)
+            print("SplashViewController - token [\(token)]")
         } else {
             performSegue(withIdentifier: showAuthenticationScreenSegueIdentifier, sender: nil)
         }
@@ -50,10 +51,12 @@ final class SplashViewController: UIViewController, AuthViewControllerDelegate {
             
             switch rezult {
             case .success(let profile):
-                self.fetchProfileImageURL(username: profile.username)
+                fetchProfileImageURL(username: profile.username)
+                print("SplashViewController - fetchProfileImageURL is work")
                 self.switchToTabBarController()
-            case .failure:
-                print("ERROR load profile")
+                print("SplashViewController - switchToTabBarController is work")
+            case .failure(let error):
+                print("[SplashViewController]: [ERROR load profile] [\(error)]")
             }
         }
         
@@ -65,9 +68,9 @@ final class SplashViewController: UIViewController, AuthViewControllerDelegate {
             
             switch result {
             case .success(let imageURL):
-                print("Profile image URL \(imageURL)")
+                print("SplashViewController - Profile image URL = true")
             case .failure(let error):
-                print("ERROR: failed to image URL - \(error)")
+                print("[SplashViewController]: [ERROR failed to image URL] - [\(error)]")
             }
         }
     }
@@ -75,7 +78,7 @@ final class SplashViewController: UIViewController, AuthViewControllerDelegate {
     private func switchToTabBarController() {
         
         guard let window = UIApplication.shared.windows.first else {
-            assertionFailure("Invalid window configuration")
+            assertionFailure("[SplashViewCOntroller]: [Invalid window configuration]")
             return
         }
         
@@ -96,7 +99,7 @@ extension SplashViewController {
                 let navigationController = segue.destination as? UINavigationController,
                 let viewController = navigationController.viewControllers[0] as? AuthViewController
             else {
-                assertionFailure("Failed to prepare for \(showAuthenticationScreenSegueIdentifier)")
+                assertionFailure("[SplashViewController]: [Failed to prepare for \(showAuthenticationScreenSegueIdentifier)]")
                 return
             }
             
@@ -123,16 +126,23 @@ extension SplashViewController {
                 case .success(let token):
                     // токен получен
                     self.storage.token = token
-                    print("Token: \(token)")
+                    print("SplashViewController - add token in tokenStorage")
                     
                     if let token = self.storage.token {
                         self.fetchProfile(token: token)
                     }
                     self.switchToTabBarController()
                 case .failure(let error):
-                    // ошибка
-                    // TODO: 11 sprint
-                    print("Error: \(error)")
+                    print("[SplashViewController]: [Error - \(error)]")
+                    
+                    let alert = UIAlertController(title: "Что-то пошло не так",
+                                                  message: "Не удалось войти в систему",
+                                                  preferredStyle: .alert)
+                    
+                    let action = UIAlertAction(title: "Ок", style: .default)
+                    alert.addAction(action)
+                    
+                    self.present(alert, animated: true, completion: nil)
                 }
             }
         }

@@ -46,14 +46,14 @@ final class ProfileImageService {
         
         // проверяем наличие токена
         guard let token = tokenStorage else {
-            print("ERROR: user is unauthorized")
+            print("[ProfileImageService]: [Error] [user is unauthorized]")
             completion(.failure(NetworkErrorProfileService.unauthorized))
             return
         }
         
         // формируем url запрос
         guard let url = URL(string: "\(baseUrl)\(username)") else {
-            print("ERROR: invalid URL ProfileImageServise")
+            print("[ProfileImageService]: [invalid URL] [\(baseUrl)]")
             completion(.failure(NetworkErrorProfileService.invalidURL))
             return
         }
@@ -67,23 +67,23 @@ final class ProfileImageService {
         (result: Result<UserResult, Error>) in
             guard let self = self else { return }
             
-            DispatchQueue.main.async {
-                switch result {
-                case .success(let userRezult):
-                    let avatarURL = userRezult.profileImage.small
-                    self.avatarURL = avatarURL
-                    print("Decode urlImage is good")
-                    completion(.success(avatarURL))
-                    
-                    NotificationCenter.default.post(
+            
+            switch result {
+            case .success(let userRezult):
+                let avatarURL = userRezult.profileImage.small
+                self.avatarURL = avatarURL
+                print("ProfileImageService - Decode urlImage is good")
+                completion(.success(avatarURL))
+                
+                NotificationCenter.default.post(
                     name: ProfileImageService.didChangeNotification,
                     object: self,
                     userInfo: ["URL": avatarURL])
-                    
-                case .failure(let error):
-                    print("Error decoding image")
-                    completion(.failure(error))
-                }
+                
+            case .failure(let error):
+                print("[ProfileImageService]: [[Decoding error ProfileImageService] [\(error.localizedDescription)]")
+                completion(.failure(error))
+                
             }
             self.task = nil
         }
@@ -91,3 +91,4 @@ final class ProfileImageService {
         task.resume()
     }
 }
+
