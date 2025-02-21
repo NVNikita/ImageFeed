@@ -61,7 +61,7 @@ final class SplashViewController: UIViewController, AuthViewControllerDelegate {
     // запршиваем аватарку 
     private func fetchProfileImageURL(username: String) {
         profileImageService.fetchProfileImageURL(username: username) { [ weak self ] result in
-            guard let self = self else { return }
+            guard self != nil else { return }
             
             switch result {
             case .success(let imageURL):

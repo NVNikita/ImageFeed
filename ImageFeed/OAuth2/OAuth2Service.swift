@@ -35,7 +35,7 @@ final class OAuth2Service {
     
     // функция для получения токена
     func fetchOAuthToken(code: String, handler: @escaping (Result<String, Error>) -> Void) {
-        // проверяем, что код выполянется из главного потока 
+        // проверяем, что код выполянется из главного потока
         assert(Thread.isMainThread)
         
         guard lastCode != code else {
@@ -53,31 +53,27 @@ final class OAuth2Service {
         }
         
         // выполняем запрос с использованием расширения URLSession
-        let task = URLSession.shared.data(for: request) { [ weak self] result in
+        let task = URLSession.shared.objectTask(for: request) { [ weak self ]
+            (result: Result<OAuthTokenResponseBody, Error>) in
             guard let self = self else { return }
             
-            switch result {
-            case .success(let data):
-                // декодируем данные
-                do {
-                    let tokenResponse = try JSONDecoder().decode(OAuthTokenResponseBody.self, from: data)
-                    // cохраняем токен
+            DispatchQueue.main.async {
+                switch result {
+                case .success(let tokenResponse):
                     self.storage.token = tokenResponse.accessToken
-                    print("Decoding fetchToken good")
-                    print(tokenResponse.accessToken)
+                    self.lastCode = nil
+                    print("Decoding fetch token good")
+                    print("\(tokenResponse.accessToken)")
                     handler(.success(tokenResponse.accessToken))
-
-                } catch {
-                    print("Decoding error: \(error.localizedDescription)")
+                case .failure(let error):
+                    print("Error: decode")
                     handler(.failure(error))
                 }
-            case .failure(let error):
-                print("Network request error: \(error.localizedDescription)")
-                handler(.failure(error))
+                // обнулились
+                self.task = nil
             }
-            self.task = nil
-            self.lastCode = nil
         }
+        // сохранили задачу
         self.task = task
         task.resume()
     }

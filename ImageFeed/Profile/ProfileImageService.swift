@@ -40,6 +40,7 @@ final class ProfileImageService {
     private(set) var avatarURL: String? // для хранения аватарки
     
     func fetchProfileImageURL(username: String, _ completion: @escaping (Result<String, Error>) -> Void) {
+        assert(Thread.isMainThread)
         
         task?.cancel()
         
@@ -62,41 +63,28 @@ final class ProfileImageService {
         request.httpMethod = "GET"
         request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
         
-        // выполняем запрос
-        let task = URLSession.shared.dataTask(with: request) { [ weak self ] data, response, error in
+        let task = URLSession.shared.objectTask(for: request) { [ weak self ]
+        (result: Result<UserResult, Error>) in
             guard let self = self else { return }
             
-            if let error = error {
-                completion(.failure(error))
-                return
-            }
-            
-            if let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode != 200 {
-                completion(.failure(NetworkErrorProfileService.httpStatusCode(httpResponse.statusCode)))
-                return
-            }
-            
-            guard let data = data else {
-                completion(.failure(NetworkErrorProfileService.noData))
-                return
-            }
-            
-            do {
-                let userRezult = try JSONDecoder().decode(UserResult.self, from: data)
-                let avatarURL = userRezult.profileImage.small
-                self.avatarURL = avatarURL
-                completion(.success(avatarURL))
-                
-                NotificationCenter.default.post(
+            DispatchQueue.main.async {
+                switch result {
+                case .success(let userRezult):
+                    let avatarURL = userRezult.profileImage.small
+                    self.avatarURL = avatarURL
+                    print("Decode urlImage is good")
+                    completion(.success(avatarURL))
+                    
+                    NotificationCenter.default.post(
                     name: ProfileImageService.didChangeNotification,
                     object: self,
                     userInfo: ["URL": avatarURL])
-                
-            } catch {
-                
-                completion(.failure(error))
+                    
+                case .failure(let error):
+                    print("Error decoding image")
+                    completion(.failure(error))
+                }
             }
-            // обнулились
             self.task = nil
         }
         self.task = task

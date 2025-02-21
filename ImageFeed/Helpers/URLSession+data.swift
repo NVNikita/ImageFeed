@@ -11,37 +11,56 @@ enum NetworkError: Error {
     case httpStatusCode(Int)
     case urlRequestError(Error)
     case urlSessionError
+    case noData
+    case decodingError
 }
 
 extension URLSession {
-    func data(
+    func objectTask<T: Decodable>(
         for request: URLRequest,
-        completion: @escaping (Result<Data, Error>) -> Void
+        completion: @escaping (Result<T, Error>) -> Void
     ) -> URLSessionTask {
-        let fulfillCompletionOnTheMainThread: (Result<Data, Error>) -> Void = { result in
+        let fulfillCompletionOnTheMainThread: (Result<T, Error>) -> Void = { result in
             DispatchQueue.main.async {
                 completion(result)
             }
         }
         
-        let task = dataTask(with: request, completionHandler: { data, response, error in
-            if let data = data, let response = response, let statusCode = (response as? HTTPURLResponse)?.statusCode {
-                if 200 ..< 300 ~= statusCode {
-                    fulfillCompletionOnTheMainThread(.success(data))
-                    print("Good statusCode 200..<300. StatusCode: \(statusCode)")
-                } else {
-                    fulfillCompletionOnTheMainThread(.failure(NetworkError.httpStatusCode(statusCode)))
-                    print("Statuscode != 200..<300. StatusCode: \(statusCode)")
-                }
-            } else if let error = error {
+        let task = dataTask(with: request) { data, response, error in
+            
+            if let error = error {
+                print("URLRequestError: \(error.localizedDescription)")
                 fulfillCompletionOnTheMainThread(.failure(NetworkError.urlRequestError(error)))
-                print("URLRequestError \(NetworkError.urlRequestError(error))")
-            } else {
-                fulfillCompletionOnTheMainThread(.failure(NetworkError.urlSessionError))
-                print("URLSessionError \(NetworkError.urlSessionError)")
+                return
             }
-        })
-        
+            
+            guard let httpResponse = response as? HTTPURLResponse else {
+                print("URLSessionError: no httpResponse ")
+                fulfillCompletionOnTheMainThread(.failure(NetworkError.urlSessionError))
+                return
+            }
+            
+            guard (200...299).contains(httpResponse.statusCode) else {
+                print("HTTPStatusCodeError: statusCode \(httpResponse.statusCode)")
+                fulfillCompletionOnTheMainThread(.failure(NetworkError.httpStatusCode(httpResponse.statusCode)))
+                return
+            }
+            
+            guard let data = data else {
+                print("URLSession: no data in response")
+                fulfillCompletionOnTheMainThread(.failure(NetworkError.noData))
+                return
+            }
+            
+            do {
+                let decodedObject = try JSONDecoder().decode(T.self, from: data)
+                fulfillCompletionOnTheMainThread(.success(decodedObject))
+            } catch {
+                print("DecodingError: \(error.localizedDescription)")
+                fulfillCompletionOnTheMainThread(.failure(NetworkError.decodingError))
+            }
+        }
         return task
     }
 }
+

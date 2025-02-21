@@ -50,6 +50,8 @@ final class ProfileService {
     
     func fetchProfile(_ token: String, completion: @escaping (Result<Profile, Error>) -> Void) {
         // отменяем предыдущую задачу, если она существует
+        assert(Thread.isMainThread)
+        
         task?.cancel()
         
         // проверка токена
@@ -61,33 +63,30 @@ final class ProfileService {
         
         print("Good request in profileService")
         
-        // таск в сеть
-        let task = URLSession.shared.data(for: request) { [ weak self ] rezult in
+        let task = URLSession.shared.objectTask(for: request) { [ weak self ]
+            (result: Result<ProfileResult, Error>) in
             guard let self = self else { return }
             
-            switch rezult {
-            case .success(let data):
-                do {
-                    let profileRezult = try JSONDecoder().decode(ProfileResult.self, from: data)
-                    print(profileRezult)
-                    let profile = Profile(profileResult: profileRezult) // ERROR LOG
+            DispatchQueue.main.async {
+                switch result {
+                case .success(let profileResult):
+                    let profile = Profile(profileResult: profileResult)
                     self.profile = profile
                     print("GOOD: Decoding profile good")
                     completion(.success(profile))
-                } catch {
+                case .failure(let error):
                     print("ERROR: Decoding error profileService: \(error.localizedDescription)")
                     completion(.failure(error))
                 }
-            case .failure(let error):
-                print("Network request error: \(error.localizedDescription)")
-                completion(.failure(error))
             }
-            // обнулились
+            // обнуляемся
             self.task = nil
         }
+        // cохраняемся
         self.task = task
         task.resume()
     }
+
     // MARK: - Private Methods
     
     // вспомогательный метод запроса

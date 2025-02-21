@@ -21,6 +21,7 @@ final class WebViewViewController: UIViewController {
     @IBOutlet private var webView: WKWebView!
     
     weak var delegate: WebViewViewControllerDelegate?
+    private var estimatedProgressObservation: NSKeyValueObservation?
     
     // MARK: - Lifecycle
     
@@ -29,11 +30,20 @@ final class WebViewViewController: UIViewController {
         
         loadAuthView()
         
+        estimatedProgressObservation = webView.observe(
+            \.estimatedProgress,
+             options: [],
+             changeHandler: { [weak self] _, _ in
+                 guard let self = self else { return }
+                 self.updateProgress()
+             })
+        
         webView.navigationDelegate = self
     }
     
+    
     // подписка обсервера
-    override func viewDidAppear(_ animated: Bool) {
+    /*override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         webView.addObserver(
             self,
@@ -61,7 +71,7 @@ final class WebViewViewController: UIViewController {
         } else {
             super.observeValue(forKeyPath: keyPath, of: object, change: change, context: context)
         }
-    }
+    }*/
     
     // MARK: - Private Methods
     
