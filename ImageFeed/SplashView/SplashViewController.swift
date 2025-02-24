@@ -14,9 +14,10 @@ final class SplashViewController: UIViewController, AuthViewControllerDelegate {
     
     private let showAuthenticationScreenSegueIdentifier = "ShowAuthenticationScreen"
     private let oauth2Service = OAuth2Service()
-    private let storage = OAuth2TokenStorage()
+    private let storage = OAuth2TokenStorage.shared
     private let profileService = ProfileService.shared
     private let profileImageService = ProfileImageService.shared
+    private var isFetchingProfile = false
     
     // MARK: Lifecycle
     
@@ -25,6 +26,7 @@ final class SplashViewController: UIViewController, AuthViewControllerDelegate {
         
         // првоерка ключа
         if let token = storage.token {
+            isFetchingProfile = true
             fetchProfile(token: token)
             print("SplashViewController - token [\(token)]")
         } else {
@@ -42,38 +44,6 @@ final class SplashViewController: UIViewController, AuthViewControllerDelegate {
     }
     
     // MARK: - Prifate Methods
-    
-    private func fetchProfile(token: String) {
-        UIBlockingProgressHUD.show()
-        profileService.fetchProfile(token) { [weak self] rezult in
-            UIBlockingProgressHUD.dismis()
-            guard let self = self else { return }
-            
-            switch rezult {
-            case .success(let profile):
-                fetchProfileImageURL(username: profile.username)
-                print("SplashViewController - fetchProfileImageURL is work")
-                self.switchToTabBarController()
-                print("SplashViewController - switchToTabBarController is work")
-            case .failure(let error):
-                print("[SplashViewController]: [ERROR load profile] [\(error)]")
-            }
-        }
-        
-    }
-    // запршиваем аватарку 
-    private func fetchProfileImageURL(username: String) {
-        profileImageService.fetchProfileImageURL(username: username) { [ weak self ] result in
-            guard self != nil else { return }
-            
-            switch result {
-            case .success(let imageURL):
-                print("SplashViewController - Profile image URL = true")
-            case .failure(let error):
-                print("[SplashViewController]: [ERROR failed to image URL] - [\(error)]")
-            }
-        }
-    }
     
     private func switchToTabBarController() {
         
@@ -102,50 +72,64 @@ extension SplashViewController {
                 assertionFailure("[SplashViewController]: [Failed to prepare for \(showAuthenticationScreenSegueIdentifier)]")
                 return
             }
-            
             // установим делегатом контроллера наш SplashViewController
             viewController.delegate = self
-            
         } else {
             super.prepare(for: segue, sender: sender)
-           }
+        }
     }
 }
 
 // обрабатываем процесс авторизации
 extension SplashViewController {
     func didAuthenticate(_ vc: AuthViewController, code: String) {
-        vc.dismiss(animated: true)
-        
-        UIBlockingProgressHUD.show()
-        
-        oauth2Service.fetchOAuthToken(code: code) { result in
-            DispatchQueue.main.async {
-                UIBlockingProgressHUD.dismis()
-                switch result {
-                case .success(let token):
-                    // токен получен
-                    self.storage.token = token
-                    print("SplashViewController - add token in tokenStorage")
+        vc.dismiss(animated: true) {
+            OAuth2Service.shared.fetchOAuthToken(code: code) { [ weak self ] result in
+                DispatchQueue.main.async {
                     
-                    if let token = self.storage.token {
-                        self.fetchProfile(token: token)
+                    switch result {
+                    case .success(let token):
+                        self?.storage.token = token
+                        print("SplashViewController - add token in tokenStorage")
+                        
+                        if let token = self?.storage.token {
+                            self?.fetchProfile(token: token)
+                        }
+                    case .failure(let error):
+                        print("[SplashViewController]: [Error - \(error)]")
                     }
-                    self.switchToTabBarController()
-                case .failure(let error):
-                    print("[SplashViewController]: [Error - \(error)]")
-                    
-                    let alert = UIAlertController(title: "Что-то пошло не так",
-                                                  message: "Не удалось войти в систему",
-                                                  preferredStyle: .alert)
-                    
-                    let action = UIAlertAction(title: "Ок", style: .default)
-                    alert.addAction(action)
-                    
-                    self.present(alert, animated: true, completion: nil)
                 }
             }
         }
     }
 }
 
+extension SplashViewController {
+    private func fetchProfile(token: String) {
+        
+            UIBlockingProgressHUD.show()
+            
+            profileService.fetchProfile(token) { [ weak self ] result in
+                UIBlockingProgressHUD.dismis()
+                guard let self = self else { return }
+                
+                switch result {
+                case .success(let profile):
+                    print("SplashViewController - \(profile.username) username")
+                    print("SplashViewController - Profile image URL = true")
+                    profileImageService.fetchProfileImageURL(username: profile.username, token: token) { _ in }
+                    self.switchToTabBarController()
+            case .failure(let error):
+                let alert = UIAlertController(title: "Что-то пошло не так",
+                                              message: "Не удалось войти в систему",
+                                              preferredStyle: .alert)
+                
+                let action = UIAlertAction(title: "Ок", style: .default)
+                alert.addAction(action)
+                
+                self.present(alert, animated: true, completion: nil)
+                print("[SplashViewController]: [ERROR load profile] [\(error)]")
+            }
+        }
+    }
+}

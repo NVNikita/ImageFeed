@@ -35,21 +35,14 @@ final class ProfileImageService {
     init() {}
     
     private let baseUrl = "https://api.unsplash.com/users/"
-    private let tokenStorage = OAuth2TokenStorage().token
+    private let tokenStorage = OAuth2TokenStorage.shared.token
     private var task: URLSessionTask?
     private(set) var avatarURL: String? // для хранения аватарки
     
-    func fetchProfileImageURL(username: String, _ completion: @escaping (Result<String, Error>) -> Void) {
+    func fetchProfileImageURL(username: String, token: String, _ completion: @escaping (Result<String, Error>) -> Void) {
         assert(Thread.isMainThread)
         
         task?.cancel()
-        
-        // проверяем наличие токена
-        guard let token = tokenStorage else {
-            print("[ProfileImageService]: [Error] [user is unauthorized]")
-            completion(.failure(NetworkErrorProfileService.unauthorized))
-            return
-        }
         
         // формируем url запрос
         guard let url = URL(string: "\(baseUrl)\(username)") else {
@@ -75,10 +68,12 @@ final class ProfileImageService {
                 print("ProfileImageService - Decode urlImage is good")
                 completion(.success(avatarURL))
                 
-                NotificationCenter.default.post(
-                    name: ProfileImageService.didChangeNotification,
-                    object: self,
-                    userInfo: ["URL": avatarURL])
+                DispatchQueue.main.async {
+                    NotificationCenter.default.post(
+                        name: ProfileImageService.didChangeNotification,
+                        object: self,
+                        userInfo: ["URL": avatarURL])
+                }
                 
             case .failure(let error):
                 print("[ProfileImageService]: [[Decoding error ProfileImageService] [\(error.localizedDescription)]")

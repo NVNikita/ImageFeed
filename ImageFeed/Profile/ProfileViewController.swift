@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import Kingfisher
 
 final class ProfileViewController: UIViewController {
     
@@ -16,6 +17,7 @@ final class ProfileViewController: UIViewController {
     private var labelStatus: UILabel!
     private var buttonLogOut: UIButton!
     private var profileServise = ProfileService.shared
+    private var profileImageService = ProfileImageService.shared
     private var profileImageServiceObserver: NSObjectProtocol?
     
     // MARK: - Lifecycle
@@ -34,20 +36,28 @@ final class ProfileViewController: UIViewController {
                         guard let self = self else { return }
                         self.updateAvatar()
                     }
-                updateAvatar()
         
         // profileView
         view.backgroundColor = .ypBlack
         
+        updateAvatar()
         updateProfileDetails()
     }
     
     private func updateAvatar() {
         guard
-            let profileImage = ProfileImageService.shared.avatarURL,
-            let url = URL(string: profileImage)
+            let profileImageURL = profileImageService.avatarURL,
+            let url = URL(string: profileImageURL)
         else { return }
-        // TODO: - обновить аватар с помощью кингфисшер
+        print("ProfileViewController - updateAvatar is working")
+        
+        let processor = RoundCornerImageProcessor(cornerRadius: 20)
+        profileImage.kf.setImage(with: url,
+                                 placeholder: UIImage(named: "UserPhoto"),
+                                 options: [
+                                    .processor(processor),
+                                    .transition(.fade(3))
+                                 ])
     }
     
     private func updateProfileDetails() {
@@ -128,3 +138,4 @@ final class ProfileViewController: UIViewController {
         // TODO: - добавить логику при нажатии на кнопку
     }
 }
+

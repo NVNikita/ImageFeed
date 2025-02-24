@@ -9,9 +9,13 @@ import Foundation
 
 final class OAuth2TokenStorage {
     
+    static let shared = OAuth2TokenStorage()
+    
     // MARK: - Private Properties
     
     private let bearerToken: String = "BearerToken"
+    
+    private init() {}
     
     // MARK: - Public Properties
     

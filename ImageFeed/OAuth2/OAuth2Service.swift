@@ -23,7 +23,7 @@ final class OAuth2Service {
     
     // MARK: - Private Properties
     private let urlToken = "https://unsplash.com/oauth/token"
-    private let storage = OAuth2TokenStorage()
+    private let storage = OAuth2TokenStorage.shared
     private var task: URLSessionTask?
     private var lastCode: String?
     static let shared = OAuth2Service()
