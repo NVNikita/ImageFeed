@@ -54,7 +54,7 @@ final class ProfileService {
     func fetchProfile(_ token: String, completion: @escaping (Result<Profile, Error>) -> Void) {
         assert(Thread.isMainThread)
         
-        // Отменяем предыдущую задачу только если она активна
+        // отменяем предыдущую задачу только если она активна
         if let task = task, task.state == .running {
             task.cancel()
         }

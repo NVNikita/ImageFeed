@@ -17,7 +17,6 @@ final class SplashViewController: UIViewController, AuthViewControllerDelegate {
     private let storage = OAuth2TokenStorage.shared
     private let profileService = ProfileService.shared
     private let profileImageService = ProfileImageService.shared
-    private var isFetchingProfile = false
     
     // MARK: Lifecycle
     
@@ -26,7 +25,6 @@ final class SplashViewController: UIViewController, AuthViewControllerDelegate {
         
         // првоерка ключа
         if let token = storage.token {
-            isFetchingProfile = true
             fetchProfile(token: token)
             print("SplashViewController - token [\(token)]")
         } else {
