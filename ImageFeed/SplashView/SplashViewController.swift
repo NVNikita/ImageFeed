@@ -17,8 +17,21 @@ final class SplashViewController: UIViewController, AuthViewControllerDelegate {
     private let storage = OAuth2TokenStorage.shared
     private let profileService = ProfileService.shared
     private let profileImageService = ProfileImageService.shared
+    private lazy var splashImageView: UIImageView = {
+        let imageView = UIImageView()
+        imageView.image = UIImage(named: "splash_screen_logo")
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.contentMode = .scaleAspectFit
+        return imageView
+    }()
     
     // MARK: Lifecycle
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        
+        addSplashView()
+    }
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
@@ -28,7 +41,7 @@ final class SplashViewController: UIViewController, AuthViewControllerDelegate {
             fetchProfile(token: token)
             print("SplashViewController - token [\(token)]")
         } else {
-            performSegue(withIdentifier: showAuthenticationScreenSegueIdentifier, sender: nil)
+            showAuthViewController()
         }
     }
     
@@ -42,6 +55,22 @@ final class SplashViewController: UIViewController, AuthViewControllerDelegate {
     }
     
     // MARK: - Prifate Methods
+    
+    private func addSplashView() {
+        view.addSubview(splashImageView)
+        view.backgroundColor = .ypBlack
+        
+        splashImageView.centerYAnchor.constraint(equalTo: view.centerYAnchor).isActive = true
+        splashImageView.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+    }
+    
+    private func showAuthViewController() {
+        let authViewController = AuthViewController()
+        let navigationController = UINavigationController(rootViewController: authViewController)
+        navigationController.modalPresentationStyle = .fullScreen
+        authViewController.delegate = self
+        present(navigationController, animated: true, completion: nil)
+    }
     
     private func switchToTabBarController() {
         
@@ -58,25 +87,6 @@ final class SplashViewController: UIViewController, AuthViewControllerDelegate {
 }
 
 // MARK: - Extensions
-
-extension SplashViewController {
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // проверим, что переходим на авторизацию
-        if segue.identifier == showAuthenticationScreenSegueIdentifier {
-            guard
-                let navigationController = segue.destination as? UINavigationController,
-                let viewController = navigationController.viewControllers[0] as? AuthViewController
-            else {
-                assertionFailure("[SplashViewController]: [Failed to prepare for \(showAuthenticationScreenSegueIdentifier)]")
-                return
-            }
-            // установим делегатом контроллера наш SplashViewController
-            viewController.delegate = self
-        } else {
-            super.prepare(for: segue, sender: sender)
-        }
-    }
-}
 
 // обрабатываем процесс авторизации
 extension SplashViewController {

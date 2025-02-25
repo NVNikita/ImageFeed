@@ -126,9 +126,6 @@
                             <constraint firstItem="y7U-xm-TOg" firstAttribute="centerX" secondItem="ope-dN-zol" secondAttribute="centerX" id="SbA-f7-xAp"/>
                         </constraints>
                     </view>
-                    <connections>
-                        <segue destination="Pm0-U1-e8W" kind="presentation" identifier="ShowAuthenticationScreen" modalPresentationStyle="fullScreen" id="IgZ-vP-3TY"/>
-                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="4Pm-nt-z1G" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
@@ -226,7 +223,7 @@
         <!--LoginViewController-->
         <scene sceneID="97Q-Z6-VcT">
             <objects>
-                <viewController title="LoginViewController" id="w09-bV-1HJ" customClass="AuthViewController" customModule="ImageFeed" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="AuthViewController" title="LoginViewController" id="w09-bV-1HJ" customClass="AuthViewController" customModule="ImageFeed" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="HNT-WW-yvk">
                         <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -342,7 +339,7 @@
                     <tabBarItem key="tabBarItem" title="" image="tab_editorial_active" id="RzN-m2-NJV"/>
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="9gq-qe-QsE">
-                        <rect key="frame" x="0.0" y="0.0" width="393" height="44"/>
+                        <rect key="frame" x="0.0" y="59" width="393" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <color key="barTintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
