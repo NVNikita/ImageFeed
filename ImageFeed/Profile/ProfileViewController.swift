@@ -21,6 +21,7 @@ final class ProfileViewController: UIViewController {
     private var profileImageServiceObserver: NSObjectProtocol?
     
     // MARK: - Lifecycle
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -35,7 +36,6 @@ final class ProfileViewController: UIViewController {
         { [weak self] _ in
             guard let self = self else { return }
             self.updateAvatar()
-            print("kk")
         }
         
         // profileView
@@ -43,6 +43,7 @@ final class ProfileViewController: UIViewController {
         
         updateAvatar()
         updateProfileDetails()
+        
     }
     
     private func updateAvatar() {
