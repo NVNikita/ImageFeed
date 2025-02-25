@@ -22,10 +22,14 @@ enum AuthServiceError: Error {
 final class OAuth2Service {
     
     // MARK: - Private Properties
+    
     private let urlToken = "https://unsplash.com/oauth/token"
     private let storage = OAuth2TokenStorage.shared
     private var task: URLSessionTask?
     private var lastCode: String?
+    
+    // MARK: Private Properties
+    
     static let shared = OAuth2Service()
     
     // MARK: - Initialized
@@ -63,8 +67,7 @@ final class OAuth2Service {
             case .success(let tokenResponse):
                 self.storage.token = tokenResponse.accessToken
                 self.lastCode = nil
-                print("OAuth2Service - Decoding fetch token good")
-                print("\(tokenResponse.accessToken)")
+                print("OAuth2Service - Decoding fetch token TRUE")
                 handler(.success(tokenResponse.accessToken))
             case .failure(let error):
                 print("[OAuth2Service]: [Decoding error OAuth2Service] [\(error.localizedDescription)]")

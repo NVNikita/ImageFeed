@@ -36,10 +36,9 @@ final class SplashViewController: UIViewController, AuthViewControllerDelegate {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         
-        // првоерка ключа
         if let token = storage.token {
             fetchProfile(token: token)
-            print("SplashViewController - token [\(token)]")
+            print("SplashViewController - token TRUE")
         } else {
             showAuthViewController()
         }
@@ -65,12 +64,15 @@ final class SplashViewController: UIViewController, AuthViewControllerDelegate {
     }
     
     private func showAuthViewController() {
-        let authViewController = AuthViewController()
-        let navigationController = UINavigationController(rootViewController: authViewController)
-        navigationController.modalPresentationStyle = .fullScreen
-        authViewController.delegate = self
-        present(navigationController, animated: true, completion: nil)
-    }
+            let storyboard = UIStoryboard(name: "Main", bundle: nil)
+            if let authViewController = storyboard.instantiateViewController(withIdentifier: "AuthViewController") as? AuthViewController {
+                authViewController.delegate = self
+                authViewController.modalPresentationStyle = .fullScreen
+                present(authViewController, animated: true, completion: nil)
+            } else {
+                assertionFailure("[SplashViewCOntroller]: [Failed to instantiate AuthViewController from Storyboard]")
+            }
+        }
     
     private func switchToTabBarController() {
         
@@ -137,6 +139,7 @@ extension SplashViewController {
                 
                 self.present(alert, animated: true, completion: nil)
                 print("[SplashViewController]: [ERROR load profile] [\(error)]")
+                self.showAuthViewController()
             }
         }
     }

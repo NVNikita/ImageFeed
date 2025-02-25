@@ -29,29 +29,34 @@ struct ProfileImage: Codable {
 
 final class ProfileImageService {
     
+    // MARK: - Static Properties
+    
     static let didChangeNotification = Notification.Name(rawValue: "ProfileImageProviderDidChange")
     static let shared = ProfileImageService()
     
+    // MARK: - Initialized
     init() {}
+    
+    // MARK: Private Properties
     
     private let baseUrl = "https://api.unsplash.com/users/"
     private let tokenStorage = OAuth2TokenStorage.shared.token
     private var task: URLSessionTask?
     private(set) var avatarURL: String? // для хранения аватарки
     
+    // MARK: - Public Methods
+    
     func fetchProfileImageURL(username: String, token: String, _ completion: @escaping (Result<String, Error>) -> Void) {
         assert(Thread.isMainThread)
         
         task?.cancel()
         
-        // формируем url запрос
         guard let url = URL(string: "\(baseUrl)\(username)") else {
             print("[ProfileImageService]: [invalid URL] [\(baseUrl)]")
             completion(.failure(NetworkErrorProfileService.invalidURL))
             return
         }
         
-        // создаем запрос
         var request = URLRequest(url: url)
         request.httpMethod = "GET"
         request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")

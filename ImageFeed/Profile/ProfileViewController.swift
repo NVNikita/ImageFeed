@@ -28,14 +28,15 @@ final class ProfileViewController: UIViewController {
         setupConstraints()
         
         profileImageServiceObserver = NotificationCenter.default
-                    .addObserver(
-                        forName: ProfileImageService.didChangeNotification,
-                        object: nil,
-                        queue: .main)
-                        { [weak self] _ in
-                        guard let self = self else { return }
-                        self.updateAvatar()
-                    }
+            .addObserver(
+                forName: ProfileImageService.didChangeNotification,
+                object: nil,
+                queue: .main)
+        { [weak self] _ in
+            guard let self = self else { return }
+            self.updateAvatar()
+            print("kk")
+        }
         
         // profileView
         view.backgroundColor = .ypBlack
@@ -103,6 +104,8 @@ final class ProfileViewController: UIViewController {
         profileImage.widthAnchor.constraint(equalToConstant: 70).isActive = true
         profileImage.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 32).isActive = true
         profileImage.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16).isActive = true
+        profileImage.layer.cornerRadius = 35
+        profileImage.layer.masksToBounds = true
         
         // labelName constraints
         labelName.font = UIFont.systemFont(ofSize: 23, weight: .bold)

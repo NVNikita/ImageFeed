@@ -43,13 +43,19 @@ struct Profile {
 
 final class ProfileService {
     
+    // MARK: - Static Properties
     static let shared = ProfileService()
+    
+    // MARK: - Initialized
     
     private init() {}
     
+    // MARK: - Private Properties
     private let urlMe: String = "https://api.unsplash.com/me"
     private var task: URLSessionTask?
     private(set) var profile: Profile?
+    
+    // MARK: - Public Methods
     
     func fetchProfile(_ token: String, completion: @escaping (Result<Profile, Error>) -> Void) {
         assert(Thread.isMainThread)
@@ -84,6 +90,8 @@ final class ProfileService {
         self.task = task
         task.resume()
     }
+    
+    // MARK: - Private Methods
     
     private func makeProfileRequest(token: String) -> URLRequest? {
         guard let url = URL(string: urlMe) else {
