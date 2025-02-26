@@ -6,25 +6,70 @@
 //
 
 import UIKit
+import Kingfisher
 
 final class ProfileViewController: UIViewController {
     
     // MARK: - Properties
-    private var profileImage: UIImageView!
-    private var labelName: UILabel!
-    private var labelMail: UILabel!
-    private var labelStatus: UILabel!
-    private var buttonLogOut: UIButton!
+    private var profileImage = UIImageView()
+    private var labelName = UILabel()
+    private var labelMail = UILabel()
+    private var labelStatus = UILabel()
+    private var buttonLogOut = UIButton()
+    private var profileServise = ProfileService.shared
+    private var profileImageService = ProfileImageService.shared
+    private var profileImageServiceObserver: NSObjectProtocol?
     
     // MARK: - Lifecycle
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        initializeUIComponents()
+        setupConstraints()
+        
+        profileImageServiceObserver = NotificationCenter.default
+            .addObserver(
+                forName: ProfileImageService.didChangeNotification,
+                object: nil,
+                queue: .main)
+        { [weak self] _ in
+            self?.updateAvatar()
+        }
         
         // profileView
         view.backgroundColor = .ypBlack
         
-        initializeUIComponents()
-        setupConstraints()
+        updateAvatar()
+        updateProfileDetails()
+        
+    }
+    
+    private func updateAvatar() {
+        guard
+            let profileImageURL = profileImageService.avatarURL,
+            let url = URL(string: profileImageURL)
+        else { return }
+        print("ProfileViewController - updateAvatar is working")
+        
+        let processor = RoundCornerImageProcessor(cornerRadius: 20)
+        profileImage.kf.setImage(with: url,
+                                 placeholder: UIImage(named: "UserPhoto"),
+                                 options: [
+                                    .processor(processor),
+                                    .transition(.fade(3))
+                                 ])
+    }
+    
+    private func updateProfileDetails() {
+        guard let profile = ProfileService.shared.profile else {
+            print("[ProfileViewService]: [Error in updateProfileDetails]")
+            return
+        }
+        
+        labelName.text = profile.name
+        labelMail.text = profile.loginName
+        labelStatus.text = profile.bio
     }
     
     // MARK: - Private Methods
@@ -54,39 +99,52 @@ final class ProfileViewController: UIViewController {
         view.addSubview(labelStatus)
         view.addSubview(buttonLogOut)
         
-        // profileImage constraints
-        profileImage.heightAnchor.constraint(equalToConstant: 70).isActive = true
-        profileImage.widthAnchor.constraint(equalToConstant: 70).isActive = true
-        profileImage.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 32).isActive = true
-        profileImage.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16).isActive = true
+        // profileImage
+        NSLayoutConstraint.activate([
+            profileImage.heightAnchor.constraint(equalToConstant: 70),
+            profileImage.widthAnchor.constraint(equalToConstant: 70),
+            profileImage.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 32),
+            profileImage.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16)
+        ])
+        profileImage.layer.cornerRadius = 35
+        profileImage.layer.masksToBounds = true
         
-        // labelName constraints
+        // labelName
+        NSLayoutConstraint.activate([
+            labelName.topAnchor.constraint(equalTo: profileImage.bottomAnchor, constant: 8),
+            labelName.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16)
+        ])
         labelName.font = UIFont.systemFont(ofSize: 23, weight: .bold)
         labelName.textColor = .white
         labelName.text = "Екатерина Новикова"
-        labelName.topAnchor.constraint(equalTo: profileImage.bottomAnchor, constant: 8).isActive = true
-        labelName.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16).isActive = true
         
-        // labelMail constraints
+        // labelMail
+        NSLayoutConstraint.activate([
+            labelMail.topAnchor.constraint(equalTo: labelName.bottomAnchor, constant: 8),
+            labelMail.leadingAnchor.constraint(equalTo: labelName.leadingAnchor)
+        ])
         labelMail.font = UIFont.systemFont(ofSize: 13, weight: .light)
         labelMail.textColor = .mailLabel
         labelMail.text = "@ekaterina_nov"
-        labelMail.topAnchor.constraint(equalTo: labelName.bottomAnchor, constant: 8).isActive = true
-        labelMail.leadingAnchor.constraint(equalTo: labelName.leadingAnchor).isActive = true
         
-        // labelStatus constraints
+        // labelStatus
+        NSLayoutConstraint.activate([
+            labelStatus.topAnchor.constraint(equalTo: labelMail.bottomAnchor, constant: 8),
+            labelStatus.leadingAnchor.constraint(equalTo: labelName.leadingAnchor)
+
+        ])
         labelStatus.textColor = .white
         labelStatus.font = UIFont.systemFont(ofSize: 13, weight: .light)
         labelStatus.text = "Hello, world!"
-        labelStatus.topAnchor.constraint(equalTo: labelMail.bottomAnchor, constant: 8).isActive = true
-        labelStatus.leadingAnchor.constraint(equalTo: labelName.leadingAnchor).isActive = true
         
-        // buttonLogout constraints
+        //buttonLogOut
+        NSLayoutConstraint.activate([
+            buttonLogOut.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
+            buttonLogOut.centerYAnchor.constraint(equalTo: profileImage.centerYAnchor)
+        ])
         buttonLogOut.tintColor = .logOutButton
         buttonLogOut.heightAnchor.constraint(equalToConstant: 44).isActive = true
         buttonLogOut.widthAnchor.constraint(equalToConstant: 44).isActive = true
-        buttonLogOut.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16).isActive = true
-        buttonLogOut.centerYAnchor.constraint(equalTo: profileImage.centerYAnchor).isActive = true
     }
     
     @objc
@@ -94,3 +152,4 @@ final class ProfileViewController: UIViewController {
         // TODO: - добавить логику при нажатии на кнопку
     }
 }
+
