@@ -136,6 +136,14 @@
 			path = Helpers;
 			sourceTree = "<group>";
 		};
+		EBB11C252D6FB57D0096B87D /* TapBarController */ = {
+			isa = PBXGroup;
+			children = (
+				EBDE54F82D6CA0D800C3433D /* TabBarController.swift */,
+			);
+			path = TapBarController;
+			sourceTree = "<group>";
+		};
 		EBC2DCEB2D1551A4000F42E3 = {
 			isa = PBXGroup;
 			children = (
@@ -163,13 +171,13 @@
 				EBE5B9FF2D5046070044B8DC /* Models */,
 				EB3DBC762D4518DB0096C758 /* Auth */,
 				EBA25DEF2D5083E1003D307B /* SplashView */,
+				EBB11C252D6FB57D0096B87D /* TapBarController */,
 				EBC2DCF72D1551A5000F42E3 /* AppDelegate.swift */,
 				EBC2DCF92D1551A5000F42E3 /* SceneDelegate.swift */,
 				EBC2DCFD2D1551A5000F42E3 /* Main.storyboard */,
 				EBC2DD002D1551A6000F42E3 /* Assets.xcassets */,
 				EBC2DD022D1551A6000F42E3 /* LaunchScreen.storyboard */,
 				EBC2DD052D1551A6000F42E3 /* Info.plist */,
-				EBDE54F82D6CA0D800C3433D /* TabBarController.swift */,
 			);
 			path = ImageFeed;
 			sourceTree = "<group>";

@@ -28,7 +28,7 @@ extension URLSession {
         
         let task = dataTask(with: request) { data, response, error in
             
-            if let error = error {
+            if let error {
                 print("[objectTask]: [URLRequestError] [\(error.localizedDescription)]")
                 fulfillCompletionOnTheMainThread(.failure(NetworkError.urlRequestError(error)))
                 return
@@ -46,7 +46,7 @@ extension URLSession {
                 return
             }
             
-            guard let data = data else {
+            guard let data else {
                 print("[objectTask]: [URLSession] [no data in response]")
                 fulfillCompletionOnTheMainThread(.failure(NetworkError.noData))
                 return

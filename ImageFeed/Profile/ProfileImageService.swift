@@ -35,7 +35,7 @@ final class ProfileImageService {
     static let shared = ProfileImageService()
     
     // MARK: - Initialized
-    init() {}
+    private init() {}
     
     // MARK: Private Properties
     
@@ -63,7 +63,7 @@ final class ProfileImageService {
         
         let task = URLSession.shared.objectTask(for: request) { [ weak self ]
         (result: Result<UserResult, Error>) in
-            guard let self = self else { return }
+            guard let self else { return }
             
             
             switch result {

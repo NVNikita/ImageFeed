@@ -13,7 +13,7 @@ final class SplashViewController: UIViewController, AuthViewControllerDelegate {
     // MARK: - Private Prperties
     
     private let showAuthenticationScreenSegueIdentifier = "ShowAuthenticationScreen"
-    private let oauth2Service = OAuth2Service()
+    private let oauth2Service = OAuth2Service.shared
     private let storage = OAuth2TokenStorage.shared
     private let profileService = ProfileService.shared
     private let profileImageService = ProfileImageService.shared
@@ -64,15 +64,16 @@ final class SplashViewController: UIViewController, AuthViewControllerDelegate {
     }
     
     private func showAuthViewController() {
-            let storyboard = UIStoryboard(name: "Main", bundle: nil)
-            if let authViewController = storyboard.instantiateViewController(withIdentifier: "AuthViewController") as? AuthViewController {
-                authViewController.delegate = self
-                authViewController.modalPresentationStyle = .fullScreen
-                present(authViewController, animated: true, completion: nil)
-            } else {
-                assertionFailure("[SplashViewCOntroller]: [Failed to instantiate AuthViewController from Storyboard]")
-            }
+        let storyboard = UIStoryboard(name: "Main", bundle: nil)
+        guard let authViewController = storyboard.instantiateViewController(withIdentifier: "AuthViewController") as? AuthViewController else {
+            assertionFailure("[SplashViewController]: [Failed to instantiate AuthViewController from Storyboard]")
+            return
         }
+        
+        authViewController.delegate = self
+        authViewController.modalPresentationStyle = .fullScreen
+        present(authViewController, animated: true, completion: nil)
+    }
     
     private func switchToTabBarController() {
         
@@ -95,15 +96,16 @@ extension SplashViewController {
     func didAuthenticate(_ vc: AuthViewController, code: String) {
         vc.dismiss(animated: true) {
             OAuth2Service.shared.fetchOAuthToken(code: code) { [ weak self ] result in
+                guard let self else { return }
                 DispatchQueue.main.async {
                     
                     switch result {
                     case .success(let token):
-                        self?.storage.token = token
+                        self.storage.token = token
                         print("SplashViewController - add token in tokenStorage")
                         
-                        if let token = self?.storage.token {
-                            self?.fetchProfile(token: token)
+                        if let token = self.storage.token {
+                            self.fetchProfile(token: token)
                         }
                     case .failure(let error):
                         print("[SplashViewController]: [Error - \(error)]")
