@@ -81,7 +81,21 @@ final class ProfileViewController: UIViewController {
         profileImage = UIImageView()
         profileImage.image = UIImage(named: "avatar")
         
-        buttonLogOut = UIButton.systemButton(with: UIImage(named: "logOut")!,
+        guard let image = UIImage(named: "logOut") else {
+            // обработка случая, когда изображение не найдено
+            print("[ProfileViewController]: ['logOut' not found]")
+            // устанавливаем изображение по умолчанию
+            guard let defaultImage = UIImage(systemName: "ipad.and.arrow.forward") else {
+                fatalError("[ProfileViewController]: ['person.crop.circle.fill' not found]")
+            }
+            buttonLogOut = UIButton.systemButton(with: defaultImage,
+                                                 target: self,
+                                                 action: #selector(Self.didTapButton))
+            return
+        }
+
+        // если изображение найдено, создаем кнопку
+        buttonLogOut = UIButton.systemButton(with: image,
                                              target: self,
                                              action: #selector(Self.didTapButton))
     }
