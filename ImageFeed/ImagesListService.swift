@@ -60,7 +60,7 @@ final class ImagesListService {
     private func dateForm(date: String?) -> Date? {
         guard let date = date else { return nil }
         let dataFormatter = DateFormatter()
-        dataFormatter.dateFormat = "dd.MM.yyyy HH:mm:ss"
+        dataFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZ"
         dataFormatter.locale = Locale(identifier: "ru_RU")
         let data = dataFormatter.date(from: date)
         return data
