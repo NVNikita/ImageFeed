@@ -55,10 +55,16 @@ final class ImagesListService {
     private var lastLoadedPage: Int?
     private var task: URLSessionTask?
     private var oa2Token = OAuth2TokenStorage.shared.token
-    private let dateFormatter: ISO8601DateFormatter = {
-        let formatter = ISO8601DateFormatter()
-        return formatter
-    }()
+    
+    
+    private func dateForm(date: String?) -> Date? {
+        guard let date = date else { return nil }
+        let dataFormatter = DateFormatter()
+        dataFormatter.dateFormat = "dd.MM.yyyy HH:mm:ss"
+        dataFormatter.locale = Locale(identifier: "ru_RU")
+        let data = dataFormatter.date(from: date)
+        return data
+    }
     
     func fetchPhotosNextPage(completion: @escaping (Result<[Photo], Error>) -> Void) {
         guard task == nil else { return }
@@ -91,7 +97,7 @@ final class ImagesListService {
                 let newPhotos = photoResults.map { photoResult in
                     Photo(id: photoResult.id,
                           size: CGSize(width: photoResult.width, height: photoResult.height),
-                          createdAt: self.dateFormatter.date(from: photoResult.createdAt),
+                          createdAt: self.dateForm(date: photoResult.createdAt),
                           welcomeDescription: photoResult.description,
                           thumbImageURL: photoResult.urls.thumb,
                           largeImageURL: photoResult.urls.full,
