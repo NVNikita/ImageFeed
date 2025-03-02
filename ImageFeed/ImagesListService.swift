@@ -75,23 +75,32 @@ final class ImagesListService {
             request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
         } else {
             print("[ImagesListService]: [Error request with token]")
+            return
         }
         
         let task = URLSession.shared.dataTask(with: request) { [ weak self ] data, response, error in
             guard let self else { return }
             
             if let error {
+                self.task = nil
                 print("[ImagesListService]: [Error \(error)]")
+                return
+            }
+            
+            guard let httpResponse = response as? HTTPURLResponse, (200...299).contains(httpResponse.statusCode) else {
+                print("[ImagesListService]: [Error invalid response]")
+                self.task = nil
+                return
             }
             
             guard let data else {
+                self.task = nil
                 print("[ImagesListService]: [Error data]")
                 return
             }
             
             do {
-                var photoResults = try JSONDecoder().decode([PhotoResult].self, from: data)
-                let newPhotos = photoResults.map { photoResult in
+                let newPhotos = try JSONDecoder().decode([PhotoResult].self, from: data).map { photoResult in
                     Photo(id: photoResult.id,
                           size: CGSize(width: photoResult.width, height: photoResult.height),
                           createdAt: ISO8601DateFormatter().date(from: photoResult.createdAt),
@@ -112,6 +121,7 @@ final class ImagesListService {
             }
             self.task = nil
         }
+        self.task = task
         task.resume()
     }
 }
