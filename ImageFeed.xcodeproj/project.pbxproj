@@ -78,6 +78,7 @@
 		EB173C5E2D18698E00C39CBD /* ImagesList */ = {
 			isa = PBXGroup;
 			children = (
+				EB287C712D7346AA00267183 /* ImagesListService.swift */,
 				EB173C5C2D18693F00C39CBD /* ImagesListCell.swift */,
 				EBC2DCFB2D1551A5000F42E3 /* ImagesListViewController.swift */,
 			);
@@ -180,7 +181,6 @@
 				EBC2DD002D1551A6000F42E3 /* Assets.xcassets */,
 				EBC2DD022D1551A6000F42E3 /* LaunchScreen.storyboard */,
 				EBC2DD052D1551A6000F42E3 /* Info.plist */,
-				EB287C712D7346AA00267183 /* ImagesListService.swift */,
 			);
 			path = ImageFeed;
 			sourceTree = "<group>";
