@@ -51,6 +51,9 @@
                                                         <constraint firstAttribute="width" constant="44" id="xKQ-sh-ntH"/>
                                                     </constraints>
                                                     <buttonConfiguration key="configuration" style="plain" image="Active_like"/>
+                                                    <connections>
+                                                        <action selector="likeButtonClicked" destination="BZE-PG-9Lz" eventType="touchUpInside" id="GYh-HJ-1Qo"/>
+                                                    </connections>
                                                 </button>
                                             </subviews>
                                             <color key="backgroundColor" name="YP Black"/>

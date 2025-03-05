@@ -18,7 +18,7 @@ struct Photo {
     let welcomeDescription: String?
     let thumbImageURL: String
     let largeImageURL: String
-    let isLiked: Bool
+    var isLiked: Bool
 }
 
 struct PhotoResult: Codable {
@@ -153,7 +153,7 @@ final class ImagesListService {
             (result: Result<EmptyResponse, Error>) in
             
             switch result {
-            case .success(let success):
+            case .success(_):
                 DispatchQueue.main.async {
                     // поиск индекса элемента
                     if let index = self.photos.firstIndex(where: { $0.id == photoId }) {

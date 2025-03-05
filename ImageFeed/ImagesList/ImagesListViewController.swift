@@ -152,7 +152,7 @@ extension ImagesListViewController {
         // устанавливаем дату
         cell.dateLabel.text = dateFormatter.string(from: photo.createdAt ?? Date())
         
-        // устанавливаем изображение лайка
+        // устанавливаем лайк
         let likeImage = photo.isLiked ? UIImage(named: "Active_like") : UIImage(named: "No_active_like")
         cell.buttonLike.setImage(likeImage, for: .normal)
         
@@ -193,9 +193,32 @@ extension ImagesListViewController: UITableViewDataSource {
         ) as? ImagesListCell else {
             return UITableViewCell()
         }
-        
+        cell.delegate = self
         configCell(for: cell, with: indexPath)
         return cell
     }
 }
 
+extension ImagesListViewController: ImagesListCellDelegate {
+    func imageListCellDidTapLike(_ cell: ImagesListCell) {
+        guard let indexPath = tableView.indexPath(for: cell) else { return }
+        
+        //получаем фото
+        let photo = photos[indexPath.row]
+        
+        UIBlockingProgressHUD.show()
+        imagesListService.changeLike(photoId: photo.id, isLike: !photo.isLiked) { [ weak self ] result in
+            guard let self else { return }
+            DispatchQueue.main.async {
+                UIBlockingProgressHUD.dismis()
+                switch result {
+                case .success(_):
+                    self.photos = self.imagesListService.photos
+                    cell.setIsLiked(isLiked: self.photos[indexPath.row].isLiked)
+                case .failure(let error):
+                    print("[ImagesListViewController]: [Eror on switch like \(error.localizedDescription)]")
+                }
+            }
+        }
+    }
+}
