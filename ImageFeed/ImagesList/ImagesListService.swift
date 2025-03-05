@@ -6,6 +6,11 @@
 import Foundation
 import UIKit
 
+enum NetworkImageListServiceError: Error {
+    case invalidURL
+    case invalidToken
+}
+
 struct Photo {
     let id: String
     let size: CGSize
@@ -46,6 +51,9 @@ struct UrlsResult: Codable {
     let thumb: String
 }
 
+// заглушка для переиспользования objectTask
+struct EmptyResponse: Decodable {}
+
 final class ImagesListService {
     
     static let didChangeNotification = Notification.Name(rawValue: "ImagesListServiceDidChange")
@@ -72,7 +80,7 @@ final class ImagesListService {
         let nextPage = (lastLoadedPage ?? 0) + 1
         
         guard let url = URL(string: "https://api.unsplash.com/photos?page=\(nextPage)") else {
-            print("[ImagesListService]: [Error URL")
+            print("[ImagesListService]: [Error URL in func fetchPhotosNextPage]")
             completion(.failure(NetworkImageListServiceError.invalidURL))
             return
         }
@@ -83,8 +91,8 @@ final class ImagesListService {
         if let token = oa2Token {
             request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
         } else {
+            print("[ImagesListService]: [Error request with token in func fetchPhotosNextPage]")
             completion(.failure(NetworkImageListServiceError.invalidToken))
-            print("[ImagesListService]: [Error request with token]")
             return
         }
         
@@ -112,6 +120,7 @@ final class ImagesListService {
                 }
             case .failure(let error):
                 DispatchQueue.main.async {
+                    print(["[ImageListService]: [Error decoding in func fetchPhotosNextPage"])
                     completion(.failure(error))
                 }
             }
@@ -120,9 +129,58 @@ final class ImagesListService {
         self.task = task
         task.resume()
     }
+    
+    func changeLike(photoId: String, isLike: Bool, _ completion: @escaping (Result<Void, Error>) -> Void) {
+        let urlLike = "https://api.unsplash.com/photos/\(photoId)/like"
+        
+        guard let token = oa2Token else {
+            print("[ImagesListService]: [Error request with token in func changeLike]")
+            completion(.failure(NetworkImageListServiceError.invalidToken))
+            return
+        }
+        
+        guard let url = URL(string: urlLike) else {
+            print("[ImagesListService]: [Error URL in func chengeLike]")
+            completion(.failure(NetworkImageListServiceError.invalidToken))
+            return
+        }
+        
+        var request = URLRequest(url: url)
+        request.httpMethod = isLike ? "POST" : "DELETE"
+        request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+        
+        let task = URLSession.shared.objectTask(for: request) {
+            (result: Result<EmptyResponse, Error>) in
+            
+            switch result {
+            case .success(let success):
+                DispatchQueue.main.async {
+                    // поиск индекса элемента
+                    if let index = self.photos.firstIndex(where: { $0.id == photoId }) {
+                        let photo = self.photos[index]
+                        // копия элемента с инвертированным значением isLiked
+                        let newPhoto = Photo(
+                            id: photo.id,
+                            size: photo.size,
+                            createdAt: photo.createdAt,
+                            welcomeDescription: photo.welcomeDescription,
+                            thumbImageURL: photo.thumbImageURL,
+                            largeImageURL: photo.largeImageURL,
+                            isLiked: !photo.isLiked
+                        )
+                        self.photos[index] = newPhoto
+                    }
+
+                    completion(.success(()))
+                }
+            case .failure(let error):
+                DispatchQueue.main.async {
+                    print("[ImagesListService]: [Error decodeing in func changeLike]")
+                    completion(.failure(error))
+                }
+            }
+        }
+        task.resume()
+    }
 }
 
-enum NetworkImageListServiceError: Error {
-    case invalidURL
-    case invalidToken
-}
