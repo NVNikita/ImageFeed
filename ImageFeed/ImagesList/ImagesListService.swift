@@ -57,9 +57,11 @@ struct EmptyResponse: Decodable {}
 final class ImagesListService {
     
     static let didChangeNotification = Notification.Name(rawValue: "ImagesListServiceDidChange")
+    static let shared = ImagesListService()
+    
+    private init() {}
     
     private (set) var photos: [Photo] = []
-    
     private var lastLoadedPage: Int?
     private var task: URLSessionTask?
     private var oa2Token = OAuth2TokenStorage.shared.token
@@ -181,6 +183,10 @@ final class ImagesListService {
             }
         }
         task.resume()
+    }
+    
+    func resetPhotos() {
+        self.photos = []
     }
 }
 

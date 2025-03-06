@@ -163,7 +163,16 @@ final class ProfileViewController: UIViewController {
     
     @objc
     private func didTapButton() {
-        // TODO: - добавить логику при нажатии на кнопку
+        let alert = UIAlertController(title: "Пока, пока!",
+                                      message: "Уверены, что хотите выйти?",
+                                      preferredStyle: .alert)
+        
+        alert.addAction(UIAlertAction(title: "Да", style: .default, handler: { _ in
+            ProfileLogoutService.shared.logout()
+        }))
+        alert.addAction(UIAlertAction(title: "Нет", style: .default))
+        
+        self.present(alert, animated: true)
     }
 }
 

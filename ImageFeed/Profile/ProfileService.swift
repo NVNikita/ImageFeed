@@ -99,4 +99,8 @@ final class ProfileService {
         
         return request
     }
+    
+    func resetProfileData() {
+        self.profile = nil
+    }
 }

@@ -19,7 +19,7 @@ final class ImagesListViewController: UIViewController {
     
     private let showSingleImageSegueIdentifier = "ShowSingleImage"
     private var imageListServiceObserver: NSObjectProtocol?
-    private let imagesListService = ImagesListService()
+    private let imagesListService = ImagesListService.shared
     private var photos: [Photo] = []
     
     //форматер даты
