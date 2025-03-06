@@ -94,22 +94,7 @@ final class ImagesListViewController: UIViewController {
             }
             
             let photo = photos[indexPath.row]
-            if let url = URL(string: photo.largeImageURL) {
-                KingfisherManager.shared.retrieveImage(with: url) { result in
-                    // изменение свойства происходит на главном потоке
-                    DispatchQueue.main.async {
-                        switch result {
-                        case .success(let imageResult):
-                            viewController.image = imageResult.image
-                        case .failure(let error):
-                            print("Ошибка загрузки изображения: \(error)")
-                            viewController.image = UIImage(named: "StubPhoto")
-                        }
-                    }
-                }
-            } else {
-                viewController.image = UIImage(named: "StubPhoto")
-            }
+            viewController.fullImageURL = URL(string: photo.largeImageURL)
         } else {
             super.prepare(for: segue, sender: sender)
         }
@@ -153,8 +138,7 @@ extension ImagesListViewController {
         cell.dateLabel.text = dateFormatter.string(from: photo.createdAt ?? Date())
         
         // устанавливаем лайк
-        let likeImage = photo.isLiked ? UIImage(named: "Active_like") : UIImage(named: "No_active_like")
-        cell.buttonLike.setImage(likeImage, for: .normal)
+        cell.setIsLiked(isLiked: photo.isLiked)
         
         // загружаем изображение с помощью Kingfisher
         if let url = URL(string: photo.thumbImageURL) {
