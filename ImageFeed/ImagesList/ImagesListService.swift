@@ -11,6 +11,8 @@ enum NetworkImageListServiceError: Error {
     case invalidToken
 }
 
+// MARK: - Structs
+
 struct Photo {
     let id: String
     let size: CGSize
@@ -54,27 +56,39 @@ struct UrlsResult: Codable {
 // заглушка для переиспользования objectTask
 struct EmptyResponse: Decodable {}
 
+// MARK: - Classes
+
 final class ImagesListService {
+    
+    // MARK: - Static Properties
     
     static let didChangeNotification = Notification.Name(rawValue: "ImagesListServiceDidChange")
     static let shared = ImagesListService()
     
+    // MARK: - Init
+    
     private init() {}
+    
+    // MARK: - Private Properties
     
     private (set) var photos: [Photo] = []
     private var lastLoadedPage: Int?
     private var task: URLSessionTask?
     private var oa2Token = OAuth2TokenStorage.shared.token
     
+    private lazy var iso8601Formatter: ISO8601DateFormatter = {
+        let formatter = ISO8601DateFormatter()
+        return formatter
+    }()
+    
+    // MARK: - Private Methods
     
     private func dateForm(date: String?) -> Date? {
         guard let date = date else { return nil }
-        let dataFormatter = DateFormatter()
-        dataFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZ"
-        dataFormatter.locale = Locale(identifier: "ru_RU")
-        let data = dataFormatter.date(from: date)
-        return data
+        return iso8601Formatter.date(from: date)
     }
+    
+    // MARK: - Public Methods 
     
     func fetchPhotosNextPage(completion: @escaping (Result<[Photo], Error>) -> Void) {
         guard task == nil else { return }
@@ -122,7 +136,7 @@ final class ImagesListService {
                 }
             case .failure(let error):
                 DispatchQueue.main.async {
-                    print(["[ImageListService]: [Error decoding in func fetchPhotosNextPage"])
+                    print(["[ImageListService]: [Error decoding in func fetchPhotosNextPage] [\(error.localizedDescription)]"])
                     completion(.failure(error))
                 }
             }
@@ -177,7 +191,7 @@ final class ImagesListService {
                 }
             case .failure(let error):
                 DispatchQueue.main.async {
-                    print("[ImagesListService]: [Error decodeing in func changeLike]")
+                    print("[ImagesListService]: [Error decodeing in func changeLike] [\(error.localizedDescription)]")
                     completion(.failure(error))
                 }
             }

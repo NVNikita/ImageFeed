@@ -10,9 +10,15 @@ import WebKit
 
 final class ProfileLogoutService {
     
+    // MARK: - Static properties
+    
     static let shared = ProfileLogoutService()
     
+    // MARK: - Init
+    
     private init() { }
+    
+    // MARK: - Publick Methods
     
     func logout() {
         cleanCookies()
@@ -23,6 +29,8 @@ final class ProfileLogoutService {
         switchToLoginScreen()
         
     }
+    
+    // MARK: - Private Methods 
     
     private func cleanCookies() {
         // Очищаем все куки из хранилища

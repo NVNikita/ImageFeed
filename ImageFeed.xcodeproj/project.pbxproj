@@ -83,7 +83,6 @@
 				EB287C712D7346AA00267183 /* ImagesListService.swift */,
 				EB173C5C2D18693F00C39CBD /* ImagesListCell.swift */,
 				EBC2DCFB2D1551A5000F42E3 /* ImagesListViewController.swift */,
-				EB826D172D7A583B00543322 /* ProfileLogoutService.swift */,
 			);
 			path = ImagesList;
 			sourceTree = "<group>";
@@ -100,6 +99,7 @@
 		EB6E94A82D1F619C006AEA2A /* Profile */ = {
 			isa = PBXGroup;
 			children = (
+				EB826D172D7A583B00543322 /* ProfileLogoutService.swift */,
 				EB6E94A92D1F619C006AEA2A /* ProfileViewController.swift */,
 				EB730F662D5BAA4500770E95 /* ProfileService.swift */,
 				EB0C9F352D64F8BA00B4FC05 /* ProfileImageService.swift */,
