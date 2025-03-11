@@ -4,7 +4,6 @@
 
 
 import Foundation
-import UIKit
 
 enum NetworkImageListServiceError: Error {
     case invalidURL
@@ -71,7 +70,7 @@ final class ImagesListService {
     
     // MARK: - Private Properties
     
-    private (set) var photos: [Photo] = []
+    private(set) var photos: [Photo] = []
     private var lastLoadedPage: Int?
     private var task: URLSessionTask?
     private var oa2Token = OAuth2TokenStorage.shared.token
@@ -128,12 +127,11 @@ final class ImagesListService {
                           isLiked: photoResult.likedByUser)
                 }
                 
-                DispatchQueue.main.async {
-                    self.photos.append(contentsOf: newPhotos)
-                    self.lastLoadedPage = nextPage
-                    NotificationCenter.default.post(name: ImagesListService.didChangeNotification, object: self)
-                    completion(.success(newPhotos))
-                }
+                self.photos.append(contentsOf: newPhotos)
+                self.lastLoadedPage = nextPage
+                NotificationCenter.default.post(name: ImagesListService.didChangeNotification, object: self)
+                completion(.success(newPhotos))
+                
             case .failure(let error):
                 DispatchQueue.main.async {
                     print(["[ImageListService]: [Error decoding in func fetchPhotosNextPage] [\(error.localizedDescription)]"])
@@ -156,7 +154,7 @@ final class ImagesListService {
         }
         
         guard let url = URL(string: urlLike) else {
-            print("[ImagesListService]: [Error URL in func chengeLike]")
+            print("[ImagesListService]: [Error URL in func changeLike]")
             completion(.failure(NetworkImageListServiceError.invalidToken))
             return
         }
@@ -169,7 +167,7 @@ final class ImagesListService {
             (result: Result<EmptyResponse, Error>) in
             
             switch result {
-            case .success(_):
+            case .success:
                 DispatchQueue.main.async {
                     // поиск индекса элемента
                     if let index = self.photos.firstIndex(where: { $0.id == photoId }) {
