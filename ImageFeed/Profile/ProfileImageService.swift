@@ -90,5 +90,9 @@ final class ProfileImageService {
         self.task = task
         task.resume()
     }
+    
+    func resetAvatar() {
+        self.avatarURL = nil
+    }
 }
 

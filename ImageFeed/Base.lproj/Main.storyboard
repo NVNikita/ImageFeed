@@ -51,6 +51,9 @@
                                                         <constraint firstAttribute="width" constant="44" id="xKQ-sh-ntH"/>
                                                     </constraints>
                                                     <buttonConfiguration key="configuration" style="plain" image="Active_like"/>
+                                                    <connections>
+                                                        <action selector="likeButtonClicked" destination="BZE-PG-9Lz" eventType="touchUpInside" id="GYh-HJ-1Qo"/>
+                                                    </connections>
                                                 </button>
                                             </subviews>
                                             <color key="backgroundColor" name="YP Black"/>
@@ -160,7 +163,7 @@
                             <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="WTJ-nv-A4m" userLabel="scrollView">
                                 <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                                 <subviews>
-                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="0" translatesAutoresizingMaskIntoConstraints="NO" id="uAd-9L-nS4">
+                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="StubPhoto" translatesAutoresizingMaskIntoConstraints="NO" id="uAd-9L-nS4">
                                         <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <color key="backgroundColor" name="YP Black"/>
@@ -362,6 +365,7 @@
         <image name="Active_like" width="30" height="26"/>
         <image name="Backward" width="24" height="24"/>
         <image name="Sharing" width="51" height="51"/>
+        <image name="StubPhoto" width="168" height="224"/>
         <image name="Vector_launchScreen" width="75" height="78"/>
         <image name="Vector_login" width="60" height="60"/>
         <image name="chevron.backward" width="9" height="16"/>
