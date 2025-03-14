@@ -11,6 +11,7 @@
 		EB13AB082D4FCF150072F0FC /* OAuth2TokenStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB13AB072D4FCF150072F0FC /* OAuth2TokenStorage.swift */; };
 		EB173C5D2D18693F00C39CBD /* ImagesListCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB173C5C2D18693F00C39CBD /* ImagesListCell.swift */; };
 		EB287C722D7346AA00267183 /* ImagesListService.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB287C712D7346AA00267183 /* ImagesListService.swift */; };
+		EB30345E2D84EBEC00684F6A /* WebViewPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB30345D2D84EBEC00684F6A /* WebViewPresenter.swift */; };
 		EB3BBD322D4530FD00958EE6 /* WebViewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB3BBD312D4530FD00958EE6 /* WebViewViewController.swift */; };
 		EB3DBC752D4517400096C758 /* AuthViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB3DBC742D4517400096C758 /* AuthViewController.swift */; };
 		EB47DBA72D56B6750063BB88 /* ProgressHUD in Frameworks */ = {isa = PBXBuildFile; productRef = EB47DBA62D56B6750063BB88 /* ProgressHUD */; };
@@ -40,6 +41,7 @@
 		EB13AB072D4FCF150072F0FC /* OAuth2TokenStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OAuth2TokenStorage.swift; sourceTree = "<group>"; };
 		EB173C5C2D18693F00C39CBD /* ImagesListCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagesListCell.swift; sourceTree = "<group>"; };
 		EB287C712D7346AA00267183 /* ImagesListService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagesListService.swift; sourceTree = "<group>"; };
+		EB30345D2D84EBEC00684F6A /* WebViewPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebViewPresenter.swift; sourceTree = "<group>"; };
 		EB3BBD312D4530FD00958EE6 /* WebViewViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebViewViewController.swift; sourceTree = "<group>"; };
 		EB3DBC742D4517400096C758 /* AuthViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthViewController.swift; sourceTree = "<group>"; };
 		EB624D522D4C008D00F5D4D4 /* OAuth2Service.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OAuth2Service.swift; sourceTree = "<group>"; };
@@ -92,6 +94,7 @@
 			children = (
 				EB3DBC742D4517400096C758 /* AuthViewController.swift */,
 				EB3BBD312D4530FD00958EE6 /* WebViewViewController.swift */,
+				EB30345D2D84EBEC00684F6A /* WebViewPresenter.swift */,
 			);
 			path = Auth;
 			sourceTree = "<group>";
@@ -293,6 +296,7 @@
 				EB826D182D7A583B00543322 /* ProfileLogoutService.swift in Sources */,
 				EBA25DF12D5083F3003D307B /* SplashViewController.swift in Sources */,
 				EB287C722D7346AA00267183 /* ImagesListService.swift in Sources */,
+				EB30345E2D84EBEC00684F6A /* WebViewPresenter.swift in Sources */,
 				EBA8F6892D4D5CD5004D7371 /* URLSession+data.swift in Sources */,
 				EB3BBD322D4530FD00958EE6 /* WebViewViewController.swift in Sources */,
 				EB624D532D4C008D00F5D4D4 /* OAuth2Service.swift in Sources */,
