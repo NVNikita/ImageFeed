@@ -34,6 +34,7 @@
 		EBC2DCFF2D1551A5000F42E3 /* Base in Resources */ = {isa = PBXBuildFile; fileRef = EBC2DCFE2D1551A5000F42E3 /* Base */; };
 		EBC2DD012D1551A6000F42E3 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = EBC2DD002D1551A6000F42E3 /* Assets.xcassets */; };
 		EBC2DD042D1551A6000F42E3 /* Base in Resources */ = {isa = PBXBuildFile; fileRef = EBC2DD032D1551A6000F42E3 /* Base */; };
+		EBC347E72D85E93600B7D082 /* ProfilePresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = EBC347E62D85E93600B7D082 /* ProfilePresenter.swift */; };
 		EBDE54F92D6CA0D800C3433D /* TabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EBDE54F82D6CA0D800C3433D /* TabBarController.swift */; };
 		EBF45B2A2D22D9FE00B3C6CF /* SingleImageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EBF45B292D22D9FE00B3C6CF /* SingleImageViewController.swift */; };
 /* End PBXBuildFile section */
@@ -76,6 +77,7 @@
 		EBC2DD002D1551A6000F42E3 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		EBC2DD032D1551A6000F42E3 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		EBC2DD052D1551A6000F42E3 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		EBC347E62D85E93600B7D082 /* ProfilePresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfilePresenter.swift; sourceTree = "<group>"; };
 		EBDE54F82D6CA0D800C3433D /* TabBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBarController.swift; sourceTree = "<group>"; };
 		EBF45B292D22D9FE00B3C6CF /* SingleImageViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SingleImageViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -137,6 +139,7 @@
 				EB6E94A92D1F619C006AEA2A /* ProfileViewController.swift */,
 				EB730F662D5BAA4500770E95 /* ProfileService.swift */,
 				EB0C9F352D64F8BA00B4FC05 /* ProfileImageService.swift */,
+				EBC347E62D85E93600B7D082 /* ProfilePresenter.swift */,
 			);
 			path = Profile;
 			sourceTree = "<group>";
@@ -352,6 +355,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				EB13AB082D4FCF150072F0FC /* OAuth2TokenStorage.swift in Sources */,
+				EBC347E72D85E93600B7D082 /* ProfilePresenter.swift in Sources */,
 				EB730F672D5BAA4500770E95 /* ProfileService.swift in Sources */,
 				EB6E94AA2D1F619C006AEA2A /* ProfileViewController.swift in Sources */,
 				EBDE54F92D6CA0D800C3433D /* TabBarController.swift in Sources */,
