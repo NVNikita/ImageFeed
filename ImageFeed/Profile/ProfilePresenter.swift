@@ -43,7 +43,7 @@ final class ProfilePresenter: ProfilePresenterProtocol {
         updateProfileDetails()
     }
     
-    private func updateAvatar() {
+    func updateAvatar() {
         guard
             let profileImageURL = profileImageService.avatarURL,
             let url = URL(string: profileImageURL)
@@ -52,7 +52,7 @@ final class ProfilePresenter: ProfilePresenterProtocol {
         view?.setAvatar(url: url)
     }
     
-    private func updateProfileDetails() {
+    func updateProfileDetails() {
         guard let profile = profileService.profile else {
             print("[ProfileViewService]: [Error in updateProfileDetails]")
             return
