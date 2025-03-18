@@ -17,6 +17,8 @@
 		EB3BBD322D4530FD00958EE6 /* WebViewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB3BBD312D4530FD00958EE6 /* WebViewViewController.swift */; };
 		EB3DBC752D4517400096C758 /* AuthViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB3DBC742D4517400096C758 /* AuthViewController.swift */; };
 		EB47DBA72D56B6750063BB88 /* ProgressHUD in Frameworks */ = {isa = PBXBuildFile; productRef = EB47DBA62D56B6750063BB88 /* ProgressHUD */; };
+		EB53BE7A2D89E4EF00355CA5 /* ImagesListPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB53BE792D89E4EF00355CA5 /* ImagesListPresenter.swift */; };
+		EB53BE7C2D89E97800355CA5 /* ImagesViewControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB53BE7B2D89E97800355CA5 /* ImagesViewControllerTests.swift */; };
 		EB624D532D4C008D00F5D4D4 /* OAuth2Service.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB624D522D4C008D00F5D4D4 /* OAuth2Service.swift */; };
 		EB63DC792D6BFD9A000BB0C1 /* SwiftKeychainWrapper in Frameworks */ = {isa = PBXBuildFile; productRef = EB63DC782D6BFD9A000BB0C1 /* SwiftKeychainWrapper */; };
 		EB6E94AA2D1F619C006AEA2A /* ProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB6E94A92D1F619C006AEA2A /* ProfileViewController.swift */; };
@@ -60,6 +62,8 @@
 		EB3034692D85083B00684F6A /* WebViewTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebViewTests.swift; sourceTree = "<group>"; };
 		EB3BBD312D4530FD00958EE6 /* WebViewViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebViewViewController.swift; sourceTree = "<group>"; };
 		EB3DBC742D4517400096C758 /* AuthViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthViewController.swift; sourceTree = "<group>"; };
+		EB53BE792D89E4EF00355CA5 /* ImagesListPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagesListPresenter.swift; sourceTree = "<group>"; };
+		EB53BE7B2D89E97800355CA5 /* ImagesViewControllerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagesViewControllerTests.swift; sourceTree = "<group>"; };
 		EB624D522D4C008D00F5D4D4 /* OAuth2Service.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OAuth2Service.swift; sourceTree = "<group>"; };
 		EB6E94A92D1F619C006AEA2A /* ProfileViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileViewController.swift; sourceTree = "<group>"; };
 		EB730F642D5B90F500770E95 /* UIBlockingProgressHUD.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIBlockingProgressHUD.swift; sourceTree = "<group>"; };
@@ -109,6 +113,7 @@
 				EB287C712D7346AA00267183 /* ImagesListService.swift */,
 				EB173C5C2D18693F00C39CBD /* ImagesListCell.swift */,
 				EBC2DCFB2D1551A5000F42E3 /* ImagesListViewController.swift */,
+				EB53BE792D89E4EF00355CA5 /* ImagesListPresenter.swift */,
 			);
 			path = ImagesList;
 			sourceTree = "<group>";
@@ -117,6 +122,7 @@
 			isa = PBXGroup;
 			children = (
 				EB3034692D85083B00684F6A /* WebViewTests.swift */,
+				EB53BE7B2D89E97800355CA5 /* ImagesViewControllerTests.swift */,
 			);
 			path = ImageFeedTests;
 			sourceTree = "<group>";
@@ -346,6 +352,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				EB53BE7C2D89E97800355CA5 /* ImagesViewControllerTests.swift in Sources */,
 				EB30346A2D85083B00684F6A /* WebViewTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -376,6 +383,7 @@
 				EBA8F6892D4D5CD5004D7371 /* URLSession+data.swift in Sources */,
 				EB3BBD322D4530FD00958EE6 /* WebViewViewController.swift in Sources */,
 				EB624D532D4C008D00F5D4D4 /* OAuth2Service.swift in Sources */,
+				EB53BE7A2D89E4EF00355CA5 /* ImagesListPresenter.swift in Sources */,
 				EBC2DCFA2D1551A5000F42E3 /* SceneDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
