@@ -9,6 +9,7 @@ import Foundation
 
 protocol ImagesListPresenterProtocol: AnyObject {
     var view: ImagesListViewProtocol? { get set }
+    var dateFormatter: DateFormatter { get set }
     func viewDidLoad()
     func fetchPhotosNextPage()
     func changeLike(for photoId: String, isLike: Bool, completion: @escaping (Bool) -> Void)
@@ -19,6 +20,14 @@ protocol ImagesListPresenterProtocol: AnyObject {
 final class ImagesListPresenter: ImagesListPresenterProtocol {
     
     var view: ImagesListViewProtocol?
+    lazy var dateFormatter: DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.dateStyle = .long
+        formatter.timeStyle = .none
+        formatter.dateFormat = "dd MMMM yyyy"
+        formatter.locale = Locale(identifier: "ru_RU")
+        return formatter
+    }()
     
     private let imagesListService = ImagesListService.shared
     private var photos: [Photo] = []

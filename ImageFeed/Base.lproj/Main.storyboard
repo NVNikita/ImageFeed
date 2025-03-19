@@ -46,7 +46,7 @@
                                                 </label>
                                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="1w0-SR-1LY">
                                                     <rect key="frame" x="333" y="4" width="44" height="44"/>
-                                                    <accessibility key="accessibilityConfiguration" identifier="LikeButton"/>
+                                                    <accessibility key="accessibilityConfiguration" identifier="likeButton"/>
                                                     <constraints>
                                                         <constraint firstAttribute="height" constant="44" id="OeC-3B-VmT"/>
                                                         <constraint firstAttribute="width" constant="44" id="xKQ-sh-ntH"/>
@@ -178,6 +178,7 @@
                             </scrollView>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="CDR-eV-vGJ">
                                 <rect key="frame" x="9" y="9" width="44" height="44"/>
+                                <accessibility key="accessibilityConfiguration" identifier="navBackButton"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="44" id="dRK-Fx-Lap"/>
                                     <constraint firstAttribute="width" constant="44" id="twx-wZ-KSu"/>

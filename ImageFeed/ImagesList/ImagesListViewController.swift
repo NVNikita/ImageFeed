@@ -19,14 +19,6 @@ final class ImagesListViewController: UIViewController, ImagesListViewProtocol {
     
     private let showSingleImageSegueIdentifier = "ShowSingleImage"
     private var presenter: ImagesListPresenterProtocol!
-    private lazy var dateFormatter: DateFormatter = {
-        let formatter = DateFormatter()
-        formatter.dateStyle = .long
-        formatter.timeStyle = .none
-        formatter.dateFormat = "dd MMMM yyyy"
-        formatter.locale = Locale(identifier: "ru_RU")
-        return formatter
-    }()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -140,7 +132,7 @@ extension ImagesListViewController {
     private func configCell(for cell: ImagesListCell, with indexPath: IndexPath) {
         let photo = presenter.photo(at: indexPath)
         
-        cell.dateLabel.text = dateFormatter.string(from: photo.createdAt ?? Date())
+        cell.dateLabel.text = presenter.dateFormatter.string(from: photo.createdAt ?? Date())
         cell.setIsLiked(isLiked: photo.isLiked)
         
         if let url = URL(string: photo.thumbImageURL) {

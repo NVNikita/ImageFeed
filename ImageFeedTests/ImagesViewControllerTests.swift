@@ -11,6 +11,11 @@ import XCTest
 
 final class ImagesListPresenterSpy: ImagesListPresenterProtocol {
     
+    var dateFormatter: DateFormatter = {
+        let formatter = DateFormatter()
+        return formatter
+    }()
+    
     var view: ImagesListViewProtocol?
     
     

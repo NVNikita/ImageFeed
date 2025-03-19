@@ -68,7 +68,9 @@ final class ProfileViewController: UIViewController, ProfileViewProtocol {
     // MARK: - Private Methods
     private func initializeUIComponents() {
         labelName = UILabel()
+        labelName.accessibilityIdentifier = "labelName"
         labelMail = UILabel()
+        labelMail.accessibilityIdentifier = "labelMail"
         labelStatus = UILabel()
         
         profileImage = UIImageView()
@@ -89,6 +91,7 @@ final class ProfileViewController: UIViewController, ProfileViewProtocol {
         buttonLogOut = UIButton.systemButton(with: image,
                                              target: self,
                                              action: #selector(Self.didTapButton))
+        buttonLogOut.accessibilityIdentifier = "buttonLogOut"
     }
     
     private func setupConstraints() {

@@ -45,7 +45,6 @@ final class ImageFeedUITests: XCTestCase {
         let cell = tablesQuery.children(matching: .cell).element(boundBy: 0)
         
         XCTAssertTrue(cell.waitForExistence(timeout: 7))
-        
     }
     
     func testFeed() throws {
@@ -53,14 +52,16 @@ final class ImageFeedUITests: XCTestCase {
         let tablesQuery = app.tables
         
         let cell = tablesQuery.children(matching: .cell).element(boundBy: 0)
+        
         cell.swipeUp()
+        sleep(3)
         
         let cellTolike = tablesQuery.children(matching: .cell).element(boundBy: 1)
         
+        sleep(2)
         cellTolike.buttons["likeButton"].tap()
-        //cellTolike.buttons["No_active_like"].tap()
-        
-        
+        sleep(2)
+        cellTolike.buttons["likeButton"].tap()
         sleep(2)
         
         cellTolike.tap()
@@ -76,6 +77,15 @@ final class ImageFeedUITests: XCTestCase {
     }
     
     func testProfile() throws {
+        sleep(3)
+        app.tabBars.buttons.element(boundBy: 1).tap()
         
+        sleep(7)
+        XCTAssertTrue(app.staticTexts["labelName"].exists)
+        XCTAssertTrue(app.staticTexts["labelMail"].exists)
+        
+        app.buttons["buttonLogOut"].tap()
+        
+        app.alerts["Пока, пока!"].scrollViews.otherElements.buttons["Да"].tap()
     }
 }
