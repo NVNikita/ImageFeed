@@ -26,10 +26,13 @@ final class WebViewViewController: UIViewController & WebViewViewControllerProto
     private var estimatedProgressObservation: NSKeyValueObservation?
     var presenter: WebViewPresenterProtocol?
     
+    
     // MARK: - Lifecycle
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        webView.accessibilityIdentifier = "UnsplashWebView"
         
         estimatedProgressObservation = webView.observe(
             \.estimatedProgress,
