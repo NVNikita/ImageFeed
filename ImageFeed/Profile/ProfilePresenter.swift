@@ -5,7 +5,6 @@
 //  Created by Никита Нагорный on 15.03.2025.
 //
 
-import Foundation
 import UIKit
 
 public protocol ProfilePresenterProtocol: AnyObject {

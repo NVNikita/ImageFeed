@@ -12,7 +12,7 @@ enum Constants {
     static let secretKey = "4MX17fKiYrL3MKvIyVK1oER-loWwrjUL8xAvfjr2A1I"
     static let redirectURI = "urn:ietf:wg:oauth:2.0:oob"
     static let accessScope = "public+read_user+write_likes"
-    static let defaultBaseURL = URL(string: "https://api.unsplash.com")!
+    static var defaultBaseURL = "https://api.unsplash.com"
     static let unsplashAuthorizeURLString = "https://unsplash.com/oauth/authorize"
 }
 
@@ -34,11 +34,15 @@ struct AuthConfiguration {
     }
     
     static var standard: AuthConfiguration {
-            return AuthConfiguration(accessKey: Constants.accessKey,
+        guard let defaultUrl = URL(string: Constants.defaultBaseURL) else {
+            fatalError("[AuthConfiguration]: [Error create URl\(Constants.defaultBaseURL)]")
+        }
+        
+        return AuthConfiguration(accessKey: Constants.accessKey,
                                      secretKey: Constants.secretKey,
                                      redirectURI: Constants.redirectURI,
                                      accessScope: Constants.accessScope,
                                      authURLString: Constants.unsplashAuthorizeURLString,
-                                     defaultBaseURL: Constants.defaultBaseURL)
+                                     defaultBaseURL: defaultUrl)
         }
 }
