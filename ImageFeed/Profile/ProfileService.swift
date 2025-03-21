@@ -7,6 +7,8 @@
 
 import UIKit
 
+// MARK: - Structs 
+
 struct ProfileResult: Codable {
     let username: String
     let firstName: String?

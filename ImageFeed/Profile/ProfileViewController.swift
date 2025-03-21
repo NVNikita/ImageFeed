@@ -8,7 +8,16 @@
 import UIKit
 import Kingfisher
 
-final class ProfileViewController: UIViewController {
+public protocol ProfileViewProtocol: AnyObject {
+    
+    func setAvatar(url: URL)
+    func setProfileDetails(name: String?, loginName: String?, bio: String?)
+    func presentAlert(_ alert: UIAlertController)
+}
+
+final class ProfileViewController: UIViewController, ProfileViewProtocol {
+    
+    
     
     // MARK: - Properties
     private var profileImage = UIImageView()
@@ -19,39 +28,24 @@ final class ProfileViewController: UIViewController {
     private var profileServise = ProfileService.shared
     private var profileImageService = ProfileImageService.shared
     private var profileImageServiceObserver: NSObjectProtocol?
+    private var presenter: ProfilePresenterProtocol!
     
     // MARK: - Lifecycle
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        view.backgroundColor = .ypBlack
+        presenter = ProfilePresenter(profileService: ProfileService.shared,
+                                     profileImageService: ProfileImageService.shared)
+        presenter.view = self
+        
         initializeUIComponents()
         setupConstraints()
-        
-        profileImageServiceObserver = NotificationCenter.default
-            .addObserver(
-                forName: ProfileImageService.didChangeNotification,
-                object: nil,
-                queue: .main)
-        { [weak self] _ in
-            self?.updateAvatar()
-        }
-        
-        // profileView
-        view.backgroundColor = .ypBlack
-        
-        updateAvatar()
-        updateProfileDetails()
-        
+        presenter.viewDidLoad()
     }
     
-    private func updateAvatar() {
-        guard
-            let profileImageURL = profileImageService.avatarURL,
-            let url = URL(string: profileImageURL)
-        else { return }
-        print("ProfileViewController - updateAvatar is working")
-        
+    func setAvatar(url: URL) {
         let processor = RoundCornerImageProcessor(cornerRadius: 20)
         profileImage.kf.setImage(with: url,
                                  placeholder: UIImage(named: "UserPhoto"),
@@ -61,43 +55,43 @@ final class ProfileViewController: UIViewController {
                                  ])
     }
     
-    private func updateProfileDetails() {
-        guard let profile = ProfileService.shared.profile else {
-            print("[ProfileViewService]: [Error in updateProfileDetails]")
-            return
-        }
-        
-        labelName.text = profile.name
-        labelMail.text = profile.loginName
-        labelStatus.text = profile.bio
+    func setProfileDetails(name: String?, loginName: String?, bio: String?) {
+        labelName.text = name
+        labelMail.text = loginName
+        labelStatus.text = bio
+    }
+    
+    func presentAlert(_ alert: UIAlertController) {
+        self.present(alert, animated: true)
     }
     
     // MARK: - Private Methods
     private func initializeUIComponents() {
         labelName = UILabel()
+        labelName.accessibilityIdentifier = "labelName"
         labelMail = UILabel()
+        labelMail.accessibilityIdentifier = "labelMail"
         labelStatus = UILabel()
         
         profileImage = UIImageView()
         profileImage.image = UIImage(named: "avatar")
         
         guard let image = UIImage(named: "logOut") else {
-            // обработка случая, когда изображение не найдено
             print("[ProfileViewController]: ['logOut' not found]")
-            // устанавливаем изображение по умолчанию
             guard let defaultImage = UIImage(systemName: "ipad.and.arrow.forward") else {
                 fatalError("[ProfileViewController]: ['person.crop.circle.fill' not found]")
             }
+            
             buttonLogOut = UIButton.systemButton(with: defaultImage,
                                                  target: self,
                                                  action: #selector(Self.didTapButton))
             return
         }
-
-        // если изображение найдено, создаем кнопку
+        
         buttonLogOut = UIButton.systemButton(with: image,
                                              target: self,
                                              action: #selector(Self.didTapButton))
+        buttonLogOut.accessibilityIdentifier = "buttonLogOut"
     }
     
     private func setupConstraints() {
@@ -163,16 +157,7 @@ final class ProfileViewController: UIViewController {
     
     @objc
     private func didTapButton() {
-        let alert = UIAlertController(title: "Пока, пока!",
-                                      message: "Уверены, что хотите выйти?",
-                                      preferredStyle: .alert)
-        
-        alert.addAction(UIAlertAction(title: "Да", style: .default, handler: { _ in
-            ProfileLogoutService.shared.logout()
-        }))
-        alert.addAction(UIAlertAction(title: "Нет", style: .default))
-        
-        self.present(alert, animated: true)
+        presenter.didTapLogoutButton()
     }
 }
 
